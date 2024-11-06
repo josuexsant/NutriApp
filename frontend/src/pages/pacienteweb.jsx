@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 import "../pages/css/style_pacienteWeb.css";
 import logo from "../assets/logo.png";
-import { useAuth } from "../hooks/useAuth";
 import Footer from '../components/Footer';
 
-const PacienteWeb = () => {
+export const PacienteWeb = () => {
   const navigate = useNavigate();
   const { signout } = useAuth();
   const [alimentos, setAlimentos] = useState([]);

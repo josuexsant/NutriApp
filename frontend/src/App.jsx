@@ -1,8 +1,6 @@
-import { Login, Home, Dashboard, Register } from "./pages/";
-import PacienteWeb from "./components/pacienteweb";
+import { Login, Home, Dashboard, Register, PacienteWeb } from "./pages/";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ProtectedRoute from "./helpers/ProtectedRoute";
-
 
 const router = createBrowserRouter([
   {
