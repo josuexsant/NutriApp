@@ -1,6 +1,7 @@
-import { Login, Home, Dashboard, Register, PacienteWeb } from "./pages/";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ProtectedRoute from "./helpers/ProtectedRoute";
+import { Dashboard, Home, Login, PatientRegister, Register, PacienteWeb } from "./pages/";
+
 
 const router = createBrowserRouter([
   {
@@ -28,7 +29,15 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/pacienteweb",
+    path: "/PatientRegister",
+    element: (
+      <ProtectedRoute>
+        <PatientRegister />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/PacienteWeb",
     element: (
       <ProtectedRoute>
         <PacienteWeb />

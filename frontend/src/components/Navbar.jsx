@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useAuth } from "../hooks/useAuth";
 import { Link } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 export const Navbar = () => {
   const { isAuthenticated, signout } = useAuth();

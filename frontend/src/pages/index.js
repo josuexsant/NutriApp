@@ -4,5 +4,6 @@ export { Login } from "./Login";
 export { Home } from "./Home";
 export { Dashboard } from "./Dashboard";
 export { Register } from "./Register";
-export { PacienteWeb } from "./pacienteweb";
+export { PatientRegister } from "./PatientRegister"
+export { PacienteWeb } from "./pacienteweb"
 // Añade más exportaciones según las páginas que tengas en el directorio
