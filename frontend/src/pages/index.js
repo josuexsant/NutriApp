@@ -7,3 +7,8 @@ export { Patient_details } from './Patient-details';
 export { Registerpatient } from './Register-patient';
 export { RegimesPanel } from './Regimes-panel'; // Añadido
 export { Register } from './Register';
+<<<<<<< HEAD
+=======
+export { RegisterRegime } from './Register-regime';
+export { UpdatePatient } from './Update-patient'; 
+>>>>>>> mi-repositorio/master

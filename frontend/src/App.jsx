@@ -10,6 +10,12 @@ import {
   RegimesPanel,
   Register,
   Registerpatient,
+<<<<<<< HEAD
+=======
+  RegisterRegime,
+  UpdatePatient, 
+
+>>>>>>> mi-repositorio/master
 } from './pages/';
 
 const router = createBrowserRouter([
@@ -77,6 +83,26 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
   },
+<<<<<<< HEAD
+=======
+  {
+    path: '/Register-regime',
+    element: (
+      <ProtectedRoute>
+        <RegisterRegime />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: 'Update-patient',
+    element: (
+      <ProtectedRoute>
+      </UpdatePatient />
+    </ProtectedRoute>
+    ),
+  },
+
+>>>>>>> mi-repositorio/master
 ]);
 
 const App = () => {
