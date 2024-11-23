@@ -1,18 +1,18 @@
-import mysql from 'mysql2';
+import { Sequelize } from "sequelize";
 
-const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '1234',
-  database: 'ssa'
+// Configuración de la conexión con Sequelize
+const sequelize = new Sequelize("ssa", "root", "1234", {
+  host: "localhost",
+  dialect: "mysql", // Dialecto de la base de datos (MySQL en este caso)
+  logging: false,   // Opcional: desactiva el logging de consultas SQL en consola
 });
 
-connection.connect((err) => {
-  if (err) {
-    console.error('Error connecting to the database:', err.stack);
-    return;
-  }
-  console.log(`Connected to the database as id ${connection.threadId}`);
-});
+// Verificar la conexión
+try {
+  await sequelize.authenticate();
+  console.log("Conexión a la base de datos establecida correctamente.");
+} catch (error) {
+  console.error("Error al conectar con la base de datos:", error);
+}
 
-export default connection;
+export default sequelize;

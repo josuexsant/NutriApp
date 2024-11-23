@@ -1,55 +1,71 @@
 import bcrypt from "bcrypt";
-import mysql from "mysql2/promise";
-import User from "../models/User";
+import Nutriologo from "../models/Nutriologo.js";
+import Paciente from "../models/Paciente.js";
 
-// TODO:
-const dbConfig = {
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "nombre_de_tu_base_de_datos",
-};
+// Registro para nutriólogos
+export const nutriologoRegister = async (req, res) => {
+  const { name, lastname1, lastname2, phoneNumber, state, city, license, email, password, confirmPassword } = req.body;
 
-export const Login = async (req, res) => {
-  const { correo, contrasena } = req.body;
+  try {
+    if (!name || !lastname1 || !lastname2 || !phoneNumber || !state || !city || !license || !email || !password || !confirmPassword) {
+      return res.status(400).json({ message: "Todos los campos son obligatorios" });
+    }
 
-  User.findOne({ where: { Correo: correo } })
-    .then((user) => {
-      if (!user) {
-        return res.status(404).json({ message: "Usuario no encontrado" });
-      }
+    if (password !== confirmPassword) {
+      return res.status(400).json({ message: "Las contraseñas no coinciden" });
+    }
 
-      bcrypt.compare(contrasena, user.Contrasena, (err, result) => {
-        if (err) {
-          return res.status(401).json({ message: "Error al autenticar" });
-        }
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-        if (result) {
-          return res.status(200).json({ message: "Usuario autenticado" });
-        }
-
-        return res.status(401).json({ message: "Contraseña incorrecta" });
-      });
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).json({ message: "Error al autenticar" });
+    const newNutriologo = await Nutriologo.create({
+      Nombre: name,
+      Apellido_paterno: lastname1,
+      Apellido_materno: lastname2,
+      Telefono: phoneNumber,
+      Estado: state,
+      Ciudad: city,
+      Licencia: license,
+      Correo: email,
+      Contrasena: hashedPassword,
     });
+
+    res.status(201).json({ message: "Nutriólogo registrado exitosamente", data: newNutriologo });
+  } catch (error) {
+    console.error("Error al registrar nutriólogo:", error);
+    res.status(500).json({ message: "Error interno del servidor" });
+  }
 };
 
-const registerUser = async (req, res) => {
-  User.create ({
-    Nombre: req.body.nombre,
-    Apellidos: req.body.apellidos,
-    Correo: req.body.correo,
-    Contrasena: req.body.contrasena,
-    Telefono: req.body.telefono
-  })
-  .then(() => {
-    res.status(201).json({ message: "Usuario registrado exitosamente" });
+// Registro para pacientes
+export const pacienteRegister = async (req, res) => {
+  const { name, lastname1, lastname2, birthDate, height, weight, email, password, confirmPassword, phoneNumber } = req.body;
+
+  try {
+    if (!name || !lastname1 || !lastname2 || !birthDate || !height || !weight || !email || !password || !confirmPassword || !phoneNumber) {
+      return res.status(400).json({ message: "Todos los campos son obligatorios" });
+    }
+
+    if (password !== confirmPassword) {
+      return res.status(400).json({ message: "Las contraseñas no coinciden" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newPaciente = await Paciente.create({
+      Nombre: name,
+      Apellido_paterno: lastname1,
+      Apellido_materno: lastname2,
+      Fecha_nacimiento: birthDate,
+      Altura: height,
+      Peso: weight,
+      Correo: email,
+      Contrasena: hashedPassword,
+      Telefono: phoneNumber,
+    });
+
+    res.status(201).json({ message: "Paciente registrado exitosamente", data: newPaciente });
+  } catch (error) {
+    console.error("Error al registrar paciente:", error);
+    res.status(500).json({ message: "Error interno del servidor" });
   }
-  .catch((error) => {
-    console.error(error);
-    res.status(500).json({ message: "Error al registrar el usuario" });
-  });
 };

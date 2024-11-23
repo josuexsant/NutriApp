@@ -11,13 +11,14 @@
     "express": "^4.21.1",
     "mysql": "^2.18.1",
     "mysql2": "^2.3.3",
-    "sequelize": "^6.6.5"
+    "node-fetch": "^3.3.2",
+    "sequelize": "^6.37.5"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
     "babel-jest": "^29.7.0",
-    "jest": "^29.0.0",
-    "supertest": "^6.3.3"
+    "jest": "^29.7.0",
+    "supertest": "^6.3.4"
   }
 }

@@ -1,10 +1,10 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
 
-const Nutriologo = sequelize.define(
-  "Nutriologo",
+const Paciente = sequelize.define(
+  "Paciente",
   {
-    ID_nutriologo: {
+    ID_paciente: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
@@ -21,20 +21,16 @@ const Nutriologo = sequelize.define(
       type: DataTypes.STRING(50),
       allowNull: false,
     },
-    Telefono: {
-      type: DataTypes.STRING(11),
+    Fecha_nacimiento: {
+      type: DataTypes.DATE,
       allowNull: false,
     },
-    Estado: {
-      type: DataTypes.STRING(50),
+    Altura: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
-    Ciudad: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-    },
-    Licencia: {
-      type: DataTypes.STRING(50),
+    Peso: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     Correo: {
@@ -45,11 +41,15 @@ const Nutriologo = sequelize.define(
       type: DataTypes.STRING(50),
       allowNull: false,
     },
+    Telefono: {
+      type: DataTypes.STRING(11),
+      allowNull: false,
+    },
   },
   {
-    tableName: "Nutriologo",
+    tableName: "Paciente",
     timestamps: false,
   }
 );
 
-export default Nutriologo;
+export default Paciente;
