@@ -33,7 +33,7 @@ CREATE TABLE paciente (
     nombres VARCHAR(50) NOT NULL,
     apellido_pat VARCHAR(50) NOT NULL,
     apellido_mat VARCHAR(50) NOT NULL,
-    edad TINYINT NOT NULL,
+    fecha_nacimiento DATE NOT NULL,
     genero CHAR(1) CHECK (genero IN ('M', 'F', 'O')),
     peso FLOAT(5,2) NOT NULL,
     altura FLOAT(4,2) NOT NULL,

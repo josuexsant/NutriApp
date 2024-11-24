@@ -58,3 +58,24 @@ END$$
 
 DELIMITER ;
 
+DELIMITER $$
+
+CREATE PROCEDURE verificar_correo_paciente (
+    IN p_correo VARCHAR(100)
+)
+BEGIN
+    DECLARE correo_existente INT;
+
+    -- Verificar si el correo ya existe en la tabla sesion paciente
+    SELECT COUNT(*) INTO correo_existente
+    FROM paciente_sesion
+    WHERE correo_electronico = p_correo;
+
+    -- Comprobar resultado y devolver error si el correo ya existe
+    IF correo_existente > 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'El correo ya esta registrado en la tabla paciente_sesion.';
+    END IF;
+END$$
+
+DELIMITER ;
