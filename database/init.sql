@@ -1,180 +1,330 @@
--- SQLBook: Code
-CREATE DATABASE IF NOT EXISTS ssa;
-USE ssa;
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Nov 11, 2024 at 02:51 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.0.30
 
--- Desactivamos temporalmente las claves foráneas
-SET FOREIGN_KEY_CHECKS = 0;
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
 
--- Eliminamos las tablas si existen
-DROP TABLE IF EXISTS `Usuario_log`;
-DROP TABLE IF EXISTS `Plan_diario`;
-DROP TABLE IF EXISTS `Unidad_medida`;
-DROP TABLE IF EXISTS `Actividad_fisica`;
-DROP TABLE IF EXISTS `Tiempo`;
-DROP TABLE IF EXISTS `Subgrupo`;
-DROP TABLE IF EXISTS `Grupo`;
-DROP TABLE IF EXISTS `Genero`;
-DROP TABLE IF EXISTS `Regimen_Alimenticio_Tiempos`;
-DROP TABLE IF EXISTS `Plan_diario_tiempos`;
-DROP TABLE IF EXISTS `Alimentos`;
-DROP TABLE IF EXISTS `Ajuste_profecional`;
-DROP TABLE IF EXISTS `Nutriologo`;
-DROP TABLE IF EXISTS `Usuario`;
 
--- Creamos las tablas
-CREATE TABLE `Usuario_log` (
-    `Id_usuario_log` INT NOT NULL AUTO_INCREMENT,
-    `Correo` VARCHAR(50) NOT NULL,
-    `Contrasena` VARCHAR(50) NOT NULL,
-    `ID_usuario` INT,
-    CONSTRAINT `PK_Usuario_log` PRIMARY KEY (`Id_usuario_log`)
-);
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
-CREATE TABLE `Plan_diario` (
-    `Id_plan` INT NOT NULL AUTO_INCREMENT,
-    `Dia` DATE NOT NULL,
-    `Cambio_realizada` BOOL NOT NULL,
-    `Id_regimen` INT NOT NULL,
-    `id_alimento_principal` INT NOT NULL,
-    `id_alimento_equivalente` INT NOT NULL,
-    `id_alimento_sustituto` INT NOT NULL,
-    `ID_ajuste` INT NOT NULL,
-    CONSTRAINT `PK_Plan_diario` PRIMARY KEY (`Id_plan`)
-);
+--
+-- Database: `nutriapp`
+--
+CREATE DATABASE IF NOT EXISTS `nutriapp` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `nutriapp`;
 
-CREATE TABLE `Unidad_medida` (
-    `Id_unidad` INT NOT NULL AUTO_INCREMENT,
-    `Unidad` VARCHAR(50) NOT NULL,
-    CONSTRAINT `PK_Unidad_medida` PRIMARY KEY (`Id_unidad`)
-);
+-- --------------------------------------------------------
 
-CREATE TABLE `Actividad_fisica` (
-    `Id_actividad_fisica` INT NOT NULL,
-    `Estado` VARCHAR(50) NOT NULL,
-    CONSTRAINT `PK_Actividad_fisica` PRIMARY KEY (`Id_actividad_fisica`)
-);
+--
+-- Table structure for table `actividad_fisica`
+--
 
-CREATE TABLE `Tiempo` (
-    `Id_tiempo` INT NOT NULL AUTO_INCREMENT,
-    `Nombre` VARCHAR(50) NOT NULL,
-    CONSTRAINT `PK_Tiempo` PRIMARY KEY (`Id_tiempo`)
-);
+CREATE TABLE IF NOT EXISTS `actividad_fisica` (
+  `Id_actividad_fisica` int(11) NOT NULL,
+  `Estado` varchar(50) NOT NULL,
+  PRIMARY KEY (`Id_actividad_fisica`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-CREATE TABLE `Subgrupo` (
-    `Id_Subgrupo` INT NOT NULL AUTO_INCREMENT,
-    `Nombre` VARCHAR(50) NOT NULL,
-    CONSTRAINT `PK_Subgrupo` PRIMARY KEY (`Id_Subgrupo`)
-);
+-- --------------------------------------------------------
 
-CREATE TABLE `Grupo` (
-    `Id_grupo` INT NOT NULL,
-    `Nombre_grupo` VARCHAR(50) NOT NULL,
-    CONSTRAINT `PK_Grupo` PRIMARY KEY (`Id_grupo`)
-);
+--
+-- Table structure for table `ajuste_profecional`
+--
 
-CREATE TABLE `Genero` (
-    `Id_Genero` INT NOT NULL,
-    `Genero` VARCHAR(50) NOT NULL,
-    CONSTRAINT `PK_Genero` PRIMARY KEY (`Id_Genero`)
-);
+CREATE TABLE IF NOT EXISTS `ajuste_profecional` (
+  `Id_ajuste` int(11) NOT NULL AUTO_INCREMENT,
+  `comentario` varchar(50) NOT NULL,
+  `Fecha_correcion` date NOT NULL,
+  `id_alimento` int(11) NOT NULL,
+  `Id_nutriologo` int(11) NOT NULL,
+  `Cantidad` int(11) NOT NULL,
+  `Id_unidad` int(11) NOT NULL,
+  PRIMARY KEY (`Id_ajuste`),
+  KEY `FK_alimento_ajuste` (`id_alimento`),
+  KEY `FK_nutriologo` (`Id_nutriologo`),
+  KEY `FK_unidad_medida_ajuste` (`Id_unidad`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-CREATE TABLE `Regimen_Alimenticio_Tiempos` (
-    `Id_regimen` INT NOT NULL AUTO_INCREMENT,
-    `Calorias_diarias` DOUBLE NOT NULL,
-    `Proteinas_diarias` DOUBLE NOT NULL,
-    `Carbohidratos_diarios` DOUBLE NOT NULL,
-    `Grasas_diarias` DOUBLE NOT NULL,
-    `Id_nutriologo` INT NOT NULL,
-    `Objetivo` VARCHAR(50) NOT NULL,
-    `ID_usuario` INT NOT NULL,
-    CONSTRAINT `PK_Regimen_Alimenticio_Tiempos` PRIMARY KEY (`Id_regimen`)
-);
+-- --------------------------------------------------------
 
-CREATE TABLE `Plan_diario_tiempos` (
-    `Id_plan` INT NOT NULL AUTO_INCREMENT,
-    `Dia` DATE NOT NULL,
-    `Cambio_realizado` BOOL NOT NULL,
-    `Id_regimen` INT NOT NULL,
-    `id_alimento_principal` INT NOT NULL,
-    `id_alimento_equivalente` INT NOT NULL,
-    `Id_tiempo` INT NOT NULL,
-    `ID_ajuste` INT NOT NULL,
-    `id_alimento_sustituto` INT NOT NULL,
-    CONSTRAINT `PK_Plan_diario_tiempos` PRIMARY KEY (`Id_plan`)
-);
+--
+-- Table structure for table `alimentos`
+--
 
-CREATE TABLE `Alimentos` (
-    `id_alimento` INT NOT NULL AUTO_INCREMENT,
-    `Nombre_alimento` VARCHAR(50) NOT NULL,
-    `Calorias` DOUBLE NOT NULL,
-    `Proteinas` DOUBLE NOT NULL,
-    `Carbohidratos` DOUBLE NOT NULL,
-    `Grasas` DOUBLE NOT NULL,
-    `Fibra` DOUBLE NOT NULL,
-    `Id_grupo` INT NOT NULL,
-    `Cantidad` INT NOT NULL,
-    `Id_unidad` INT NOT NULL,
-    `Id_Subgrupo` INT NOT NULL,
-    CONSTRAINT `PK_Alimentos` PRIMARY KEY (`id_alimento`)
-);
+CREATE TABLE IF NOT EXISTS `alimentos` (
+  `Id_alimento` int(11) NOT NULL AUTO_INCREMENT,
+  `Nombre_alimento` varchar(50) NOT NULL,
+  `Calorias` double NOT NULL,
+  `Proteinas` double NOT NULL,
+  `Carbohidratos` double NOT NULL,
+  `Grasas` double NOT NULL,
+  `Fibra` double NOT NULL,
+  `Id_grupo` int(11) NOT NULL,
+  `Cantidad` int(11) NOT NULL,
+  `Id_unidad` int(11) NOT NULL,
+  `Id_Subgrupo` int(11) NOT NULL,
+  PRIMARY KEY (`Id_alimento`),
+  KEY `FK_grupo` (`Id_grupo`),
+  KEY `FK_subgrupo` (`Id_Subgrupo`),
+  KEY `FK_unidad_medida` (`Id_unidad`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-CREATE TABLE `Ajuste_profecional` (
-    `ID_ajuste` INT NOT NULL AUTO_INCREMENT,
-    `comentario` VARCHAR(50) NOT NULL,
-    `Fecha_correcion` DATE NOT NULL,
-    `id_alimento` INT NOT NULL,
-    `Id_nutriologo` INT NOT NULL,
-    `Cantidad` INT NOT NULL,
-    `Id_unidad` INT NOT NULL,
-    CONSTRAINT `PK_Ajuste_profecional` PRIMARY KEY (`ID_ajuste`)
-);
+-- --------------------------------------------------------
 
-CREATE TABLE `Nutriologo` (
-    `Id_nutriologo` INT NOT NULL AUTO_INCREMENT,
-    `Nombre` VARCHAR(50) NOT NULL,
-    `Correo` VARCHAR(50) NOT NULL,
-    `Contrasena` VARCHAR(50) NOT NULL,
-    `Telefono` VARCHAR(11) NOT NULL,
-    `Apellido_paterno` VARCHAR(50) NOT NULL,
-    `Apellido_Materno` VARCHAR(50) NOT NULL,
-    CONSTRAINT `PK_Nutriologo` PRIMARY KEY (`Id_nutriologo`)
-);
+--
+-- Table structure for table `genero`
+--
 
-CREATE TABLE `Usuario` (
-    `ID_usuario` INT NOT NULL AUTO_INCREMENT,
-    `Nombre` VARCHAR(50) NOT NULL,
-    `Fecha_nacimiento` DATE NOT NULL,
-    `Altura` INT NOT NULL,
-    `Peso` INT NOT NULL,
-    `Correo` VARCHAR(50) NOT NULL,
-    `Contrasena` VARCHAR(50) NOT NULL,
-    `Telefono` VARCHAR(11) NOT NULL,
-    `Apellido_paterno` VARCHAR(50) NOT NULL,
-    `Apellido_materno` VARCHAR(50) NOT NULL,
-    `Id_Genero` INT NOT NULL,
-    `Id_actividad_fisica` INT NOT NULL,
-    CONSTRAINT `PK_Usuario` PRIMARY KEY (`ID_usuario`)
-);
+CREATE TABLE IF NOT EXISTS `genero` (
+  `Id_Genero` int(11) NOT NULL,
+  `Genero` varchar(50) NOT NULL,
+  PRIMARY KEY (`Id_Genero`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Agregamos los índices
-ALTER TABLE `Usuario_log` ADD INDEX `IXFK_Usuario_log_Usuario` (`ID_usuario`);
+-- --------------------------------------------------------
 
--- Añadimos las claves foráneas
-ALTER TABLE `Usuario_log` 
-ADD CONSTRAINT `FK_Usuario_log_Usuario`
-    FOREIGN KEY (`ID_usuario`) REFERENCES `Usuario` (`ID_usuario`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+--
+-- Table structure for table `grupo`
+--
 
-ALTER TABLE `Plan_diario`
-ADD CONSTRAINT `FK_alimento_principal`
-    FOREIGN KEY (`id_alimento_principal`) REFERENCES `Alimentos` (`id_alimento`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-ADD CONSTRAINT `FK_alimento_sustituto`
-    FOREIGN KEY (`id_alimento_sustituto`) REFERENCES `Alimentos` (`id_alimento`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-ADD CONSTRAINT `FK_alimento_equivalente`
-    FOREIGN KEY (`id_alimento_equivalente`) REFERENCES `Alimentos` (`id_alimento`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-ADD CONSTRAINT `FK_Plan_diario_Ajuste_profecional`
-    FOREIGN KEY (`ID_ajuste`) REFERENCES `Ajuste_profecional` (`ID_ajuste`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-ADD CONSTRAINT `FK_Plan_diario_Regimen_Alimenticio_Tiempos`
-    FOREIGN KEY (`Id_regimen`) REFERENCES `Regimen_Alimenticio_Tiempos` (`Id_regimen`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+CREATE TABLE IF NOT EXISTS `grupo` (
+  `Id_grupo` int(11) NOT NULL,
+  `Nombre_grupo` varchar(50) NOT NULL,
+  PRIMARY KEY (`Id_grupo`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Reactivamos las claves foráneas
-SET FOREIGN_KEY_CHECKS = 1;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `nutriologo`
+--
+
+CREATE TABLE IF NOT EXISTS `nutriologo` (
+  `Id_nutriologo` int(11) NOT NULL AUTO_INCREMENT,
+  `Nombre` varchar(50) NOT NULL,
+  `Correo` varchar(50) NOT NULL,
+  `Contrasena` varchar(50) NOT NULL,
+  `Telefono` varchar(11) NOT NULL,
+  `Apellido_paterno` varchar(50) NOT NULL,
+  `Apellido_Materno` varchar(50) NOT NULL,
+  PRIMARY KEY (`Id_nutriologo`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `plan_diario`
+--
+
+CREATE TABLE IF NOT EXISTS `plan_diario` (
+  `Id_plan` int(11) NOT NULL AUTO_INCREMENT,
+  `Dia` date NOT NULL,
+  `Cambio_realizada` int(11) NOT NULL,
+  `Id_regimen` int(11) NOT NULL,
+  `id_alimento_principal` int(11) NOT NULL,
+  `id_alimento_equivalente` int(11) NOT NULL,
+  `id_alimento_sustituto` int(11) NOT NULL,
+  `ID_ajuste` int(11) NOT NULL,
+  PRIMARY KEY (`Id_plan`),
+  KEY `FK_alimento_principal` (`id_alimento_principal`),
+  KEY `FK_alimento_equivalente` (`id_alimento_equivalente`),
+  KEY `FK_alimento_sustituto` (`id_alimento_sustituto`),
+  KEY `FK_ajuste_profesional` (`ID_ajuste`),
+  KEY `FK_regimen_alimenticio` (`Id_regimen`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `plan_diario_tiempos`
+--
+
+CREATE TABLE IF NOT EXISTS `plan_diario_tiempos` (
+  `Id_plan` int(11) NOT NULL AUTO_INCREMENT,
+  `Dia` date NOT NULL,
+  `Cambio_realizado` int(11) NOT NULL,
+  `Id_regimen_tiempos` int(11) NOT NULL,
+  `Id_alimento_principal_tiempos` int(11) NOT NULL,
+  `Id_alimento_equivalente_tiempos` int(11) NOT NULL,
+  `Id_tiempo` int(11) NOT NULL,
+  `Id_ajuste_tiempos` int(11) NOT NULL,
+  `Id_alimento_sustituto_tiempos` int(11) NOT NULL,
+  PRIMARY KEY (`Id_plan`),
+  KEY `FK_tiempo` (`Id_tiempo`),
+  KEY `FK_alimento_principal_tiempos` (`Id_alimento_principal_tiempos`),
+  KEY `FK_alimento_equivalente_tiempos` (`Id_alimento_equivalente_tiempos`),
+  KEY `FK_alimento_sustituto_tiempos` (`Id_alimento_sustituto_tiempos`),
+  KEY `FK_ajuste_tiempos` (`Id_ajuste_tiempos`),
+  KEY `FK_regimen_alimenticio_tiempos` (`Id_regimen_tiempos`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `regimen_alimenticio_tiempos`
+--
+
+CREATE TABLE IF NOT EXISTS `regimen_alimenticio_tiempos` (
+  `Id_regimen` int(11) NOT NULL AUTO_INCREMENT,
+  `Calorias_diarias` double NOT NULL,
+  `Proteinas_diarias` double NOT NULL,
+  `Carbohidratos_diarios` double NOT NULL,
+  `Grasas_diarias` double NOT NULL,
+  `Id_nutriologo` int(11) NOT NULL,
+  `Objetivo` varchar(50) NOT NULL,
+  `ID_usuario` int(11) NOT NULL,
+  PRIMARY KEY (`Id_regimen`),
+  KEY `FK_usuario_regimen` (`ID_usuario`),
+  KEY `FK_nutriologo_regimen` (`Id_nutriologo`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `subgrupo`
+--
+
+CREATE TABLE IF NOT EXISTS `subgrupo` (
+  `Id_Subgrupo` int(11) NOT NULL AUTO_INCREMENT,
+  `Nombre` varchar(50) NOT NULL,
+  PRIMARY KEY (`Id_Subgrupo`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tiempo`
+--
+
+CREATE TABLE IF NOT EXISTS `tiempo` (
+  `Id_tiempo` int(11) NOT NULL AUTO_INCREMENT,
+  `Nombre` varchar(50) NOT NULL,
+  PRIMARY KEY (`Id_tiempo`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `unidad_medida`
+--
+
+CREATE TABLE IF NOT EXISTS `unidad_medida` (
+  `Id_unidad` int(11) NOT NULL AUTO_INCREMENT,
+  `Unidad` varchar(50) NOT NULL,
+  PRIMARY KEY (`Id_unidad`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `usuario`
+--
+
+CREATE TABLE IF NOT EXISTS `usuario` (
+  `Id_usuario` int(11) NOT NULL AUTO_INCREMENT,
+  `Nombre` varchar(50) NOT NULL,
+  `Fecha_nacimiento` date NOT NULL,
+  `Altura` int(11) NOT NULL,
+  `Peso` int(11) NOT NULL,
+  `Correo` varchar(50) NOT NULL,
+  `Contrasena` varchar(50) NOT NULL,
+  `Telefono` varchar(11) NOT NULL,
+  `Apellido_paterno` varchar(50) NOT NULL,
+  `Apellido_materno` varchar(50) NOT NULL,
+  `Id_Genero` int(11) NOT NULL,
+  `Id_actividad_fisica` int(11) NOT NULL,
+  PRIMARY KEY (`Id_usuario`),
+  KEY `FK_genero_usuario` (`Id_Genero`),
+  KEY `FK_actividad_usuario` (`Id_actividad_fisica`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `usuario_log`
+--
+
+CREATE TABLE IF NOT EXISTS `usuario_log` (
+  `Id_usuario_log` int(11) NOT NULL AUTO_INCREMENT,
+  `Correo` varchar(50) NOT NULL,
+  `Contrasena` varchar(50) NOT NULL,
+  `ID_usuario` int(11) DEFAULT NULL,
+  PRIMARY KEY (`Id_usuario_log`),
+  KEY `IXFK_Usuario_log_Usuario` (`ID_usuario`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `ajuste_profecional`
+--
+ALTER TABLE `ajuste_profecional`
+  ADD CONSTRAINT `FK_alimento_ajuste` FOREIGN KEY (`id_alimento`) REFERENCES `alimentos` (`Id_alimento`),
+  ADD CONSTRAINT `FK_nutriologo` FOREIGN KEY (`Id_nutriologo`) REFERENCES `nutriologo` (`Id_nutriologo`),
+  ADD CONSTRAINT `FK_unidad_medida_ajuste` FOREIGN KEY (`Id_unidad`) REFERENCES `unidad_medida` (`Id_unidad`);
+
+--
+-- Constraints for table `alimentos`
+--
+ALTER TABLE `alimentos`
+  ADD CONSTRAINT `FK_grupo` FOREIGN KEY (`Id_grupo`) REFERENCES `grupo` (`Id_grupo`),
+  ADD CONSTRAINT `FK_subgrupo` FOREIGN KEY (`Id_Subgrupo`) REFERENCES `subgrupo` (`Id_Subgrupo`),
+  ADD CONSTRAINT `FK_unidad_medida` FOREIGN KEY (`Id_unidad`) REFERENCES `unidad_medida` (`Id_unidad`);
+
+--
+-- Constraints for table `plan_diario`
+--
+ALTER TABLE `plan_diario`
+  ADD CONSTRAINT `FK_ajuste_profesional` FOREIGN KEY (`ID_ajuste`) REFERENCES `ajuste_profecional` (`Id_ajuste`),
+  ADD CONSTRAINT `FK_alimento_equivalente` FOREIGN KEY (`id_alimento_equivalente`) REFERENCES `alimentos` (`Id_alimento`),
+  ADD CONSTRAINT `FK_alimento_principal` FOREIGN KEY (`id_alimento_principal`) REFERENCES `alimentos` (`Id_alimento`),
+  ADD CONSTRAINT `FK_alimento_sustituto` FOREIGN KEY (`id_alimento_sustituto`) REFERENCES `alimentos` (`Id_alimento`),
+  ADD CONSTRAINT `FK_regimen_alimenticio` FOREIGN KEY (`Id_regimen`) REFERENCES `regimen_alimenticio_tiempos` (`Id_regimen`);
+
+--
+-- Constraints for table `plan_diario_tiempos`
+--
+ALTER TABLE `plan_diario_tiempos`
+  ADD CONSTRAINT `FK_ajuste_tiempos` FOREIGN KEY (`Id_ajuste_tiempos`) REFERENCES `ajuste_profecional` (`Id_ajuste`),
+  ADD CONSTRAINT `FK_alimento_equivalente_tiempos` FOREIGN KEY (`Id_alimento_equivalente_tiempos`) REFERENCES `alimentos` (`Id_alimento`),
+  ADD CONSTRAINT `FK_alimento_principal_tiempos` FOREIGN KEY (`Id_alimento_principal_tiempos`) REFERENCES `alimentos` (`Id_alimento`),
+  ADD CONSTRAINT `FK_alimento_sustituto_tiempos` FOREIGN KEY (`Id_alimento_sustituto_tiempos`) REFERENCES `alimentos` (`Id_alimento`),
+  ADD CONSTRAINT `FK_regimen_alimenticio_tiempos` FOREIGN KEY (`Id_regimen_tiempos`) REFERENCES `regimen_alimenticio_tiempos` (`Id_regimen`),
+  ADD CONSTRAINT `FK_tiempo` FOREIGN KEY (`Id_tiempo`) REFERENCES `tiempo` (`Id_tiempo`);
+
+--
+-- Constraints for table `regimen_alimenticio_tiempos`
+--
+ALTER TABLE `regimen_alimenticio_tiempos`
+  ADD CONSTRAINT `FK_nutriologo_regimen` FOREIGN KEY (`Id_nutriologo`) REFERENCES `nutriologo` (`Id_nutriologo`),
+  ADD CONSTRAINT `FK_usuario_regimen` FOREIGN KEY (`ID_usuario`) REFERENCES `usuario` (`Id_usuario`);
+
+--
+-- Constraints for table `usuario`
+--
+ALTER TABLE `usuario`
+  ADD CONSTRAINT `FK_actividad_usuario` FOREIGN KEY (`Id_actividad_fisica`) REFERENCES `actividad_fisica` (`Id_actividad_fisica`),
+  ADD CONSTRAINT `FK_genero_usuario` FOREIGN KEY (`Id_Genero`) REFERENCES `genero` (`Id_Genero`);
+
+--
+-- Constraints for table `usuario_log`
+--
+ALTER TABLE `usuario_log`
+  ADD CONSTRAINT `FK_Usuario_log_Usuario` FOREIGN KEY (`ID_usuario`) REFERENCES `usuario` (`Id_usuario`);
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
