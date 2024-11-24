@@ -1,9 +1,9 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import logo from '../assets/logo.png';
-import { useNavigate } from 'react-router-dom';
-import { MainLayout } from '../layouts/MainLayout';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import logo from '../assets/logo.png';
+import { MainLayout } from '../layouts/MainLayout';
 
 export const Register = () => {
   const navigate = useNavigate();
@@ -16,8 +16,29 @@ export const Register = () => {
 
   // Función para manejar el envío del formulario
   const onSubmit = async (data) => {
-    console.log(data);
-    navigate('/');
+    e.preventDefault();
+
+    try {
+      const response = await fetch('/api/nutriologo/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage('Nutriólogo registrado exitosamente');
+        // Aquí puedes redirigir o limpiar el formulario
+      } else {
+        setMessage(data.message || 'Error al registrar');
+      }
+    } catch (error) {
+      console.error('Error al conectar con la API:', error);
+      setMessage('Error al registrar. Inténtalo de nuevo.');
+    }
   };
 
   return (
