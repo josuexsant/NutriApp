@@ -41,9 +41,45 @@ CREATE TABLE paciente (
 );
 
 CREATE TABLE paciente_sesion (
-    id_usuario INT AUTO_INCREMENT PRIMARY KEY,
+    id_paciente_sesion INT AUTO_INCREMENT PRIMARY KEY,
     id_paciente INT NOT NULL,
     correo_electronico VARCHAR(50) NOT NULL UNIQUE,
     contrasena VARCHAR(8) NOT NULL,
     FOREIGN KEY (id_paciente) REFERENCES paciente(id_paciente) ON DELETE CASCADE
+);
+-- Crear la tabla Nutriologo
+CREATE TABLE nutriologo (
+    id_nutriologo INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    apellido_pat VARCHAR(100) NOT NULL,
+	apellido_mat VARCHAR(100) NOT NULL,
+    telefono VARCHAR(15) NOT NULL, 
+    ciudad_residencia VARCHAR(50) NOT NULL, 
+    codigo_postal VARCHAR(10) NOT NULL,
+    cedula_profesional VARCHAR(20) UNIQUE NOT NULL 
+);
+
+-- Crear tabla para las credenciales
+CREATE TABLE nutriologo_sesion (
+  id_nutriologo_sesion INT AUTO_INCREMENT PRIMARY KEY, 
+	id_nutriologo int NOT NULL,
+	correo_electronico VARCHAR(100) NOT NULL,
+	contrasena VARCHAR(255) NOT NULL,
+	FOREIGN KEY (id_nutriologo) REFERENCES nutriologo(id_nutriologo)
+);
+
+---- tabla tokens_nutriologos
+CREATE TABLE tokens_nutriologos (
+    id_token INT AUTO_INCREMENT PRIMARY KEY,
+    id_sesion_nutriologo INT NOT NULL,
+    token VARCHAR(255) NOT NULL,
+    FOREIGN KEY (id_sesion_nutriologo) REFERENCES nutriologo_sesion(id_nutriologo_sesion)
+);
+
+---- tabla tokens_nutriologos
+CREATE TABLE tokens_paciente (
+    id_token INT AUTO_INCREMENT PRIMARY KEY,
+    id_sesion_paciente INT NOT NULL,
+    token VARCHAR(255) NOT NULL,
+    FOREIGN KEY (id_sesion_paciente) REFERENCES paciente_sesion(id_paciente_sesion)
 );
