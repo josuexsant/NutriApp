@@ -1,7 +1,7 @@
 import express from "express";
 import { nutriologoRegister, pacienteRegister } from "../controllers/userController.js";
 
-const router = express.Router();
+export const router = express.Router();
 
 // Ruta para registrar un nutriólogo
 router.post("/register/nutriologo", nutriologoRegister);

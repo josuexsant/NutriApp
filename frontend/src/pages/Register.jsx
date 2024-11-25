@@ -1,51 +1,60 @@
-import "bootstrap/dist/css/bootstrap.min.css";
-import logo from "../assets/logo.png";
-import { useNavigate } from "react-router-dom";
-import { MainLayout } from "../layouts/MainLayout";
-import { useState } from "react";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import logo from '../assets/logo.png';
+import { MainLayout } from '../layouts/MainLayout';
 
 export const Register = () => {
   const navigate = useNavigate();
-  const [errors, setErrors] = useState("");
+  const [errors, setErrors] = useState('');
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    formState: { errors: formErrors },
+  } = useForm();
 
-  // TODO:  Implementar validación de contraseña
-  const validatePassword = (password) => {
-    
-  };
+  // Función para manejar el envío del formulario
+// Función para manejar el envío del formulario
+const onSubmit = async (formData) => {
+  if (formData.password !== formData.confirmPassword) {
+    setErrors('Las contraseñas no coinciden');
+    return;
+  }
 
-  // TODO: Implementar validación de campos
-  const validateFields = () => {
-    setErrors("Error en los campos");
-    return false;
-  };
+  try {
+    const response = await fetch('/api/nutriologo/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const formData = {
-      name: document.getElementById("name").value,
-      lastname1: document.getElementById("lastname1").value,
-      lastname2: document.getElementById("lastname2").value,
-      phoneNumber: document.getElementById("phoneNumber").value,
-      state: document.getElementById("inputState").value,
-      city: document.getElementById("city").value,
-      license: document.getElementById("license").value,
-      email: document.getElementById("email").value,
-      password: document.getElementById("password").value,
-      confirmPassword: document.getElementById("confirmPassword").value,
-    };
+    const data = await response.json();
 
-    console.log(formData);
-    navigate("/");
-  };
+    if (response.ok) {
+      setErrors('Nutriólogo registrado exitosamente');
+      navigate('/login'); // Redirige al login tras el registro
+    } else {
+      setErrors(data.message || 'Error al registrar');
+    }
+  } catch (error) {
+    console.error('Error al conectar con la API:', error);
+    setErrors('Error al registrar. Inténtalo de nuevo.');
+  }
+};
 
-  return (
-    <MainLayout>
-      <div
-        className="d-flex justify-content-center align-items-center min-h-screen"
-        style={{ backgroundColor: "#f8f9fa" }}
-      >
-        <div className="card p-4" style={{ width: "400px" }}>
-          <form className="form-signin" onSubmit={handleSubmit}>
+
+return (
+  <MainLayout>
+    <div
+      className="d-flex justify-content-center align-items-center min-h-screen"
+      style={{ backgroundColor: '#f8f9fa' }}
+    >
+      <div className="card p-4" style={{ width: '400px' }}>
+        <form className="form-signin" onSubmit={handleSubmit(onSubmit)}>
             <h1 className="h3 mb-3 font-weight-normal text-center">NutriApp</h1>
             <img
               className="mb-4 mx-auto d-block"
@@ -58,138 +67,171 @@ export const Register = () => {
               Registrate
             </h2>
 
-            <label htmlFor="inputFirstName" className="sr-only">
+            {/* Campo nombre */}
+            <label htmlFor="name" className="sr-only">
               Nombre
             </label>
             <input
               type="text"
               id="name"
               className="form-control mb-3"
-              required=""
-              autoFocus=""
+              {...register('name', { required: 'Este campo es obligatorio' })}
             />
+            {formErrors.name && (
+              <p className="text-danger">{formErrors.name.message}</p>
+            )}
 
-            <label htmlFor="inputLastName" className="sr-only">
+            {/* Campo apellido paterno */}
+            <label htmlFor="lastname1" className="sr-only">
               Apellido Paterno
             </label>
             <input
               type="text"
               id="lastname1"
               className="form-control mb-3"
-              required=""
+              {...register('lastname1', {
+                required: 'Este campo es obligatorio',
+              })}
             />
+            {formErrors.lastname1 && (
+              <p className="text-danger">{formErrors.lastname1.message}</p>
+            )}
 
-            <label htmlFor="inputMiddleName" className="sr-only">
+            {/* Campo apellido materno */}
+            <label htmlFor="lastname2" className="sr-only">
               Apellido Materno
             </label>
             <input
               type="text"
               id="lastname2"
               className="form-control mb-3"
-              required=""
+              {...register('lastname2', {
+                required: 'Este campo es obligatorio',
+              })}
             />
+            {formErrors.lastname2 && (
+              <p className="text-danger">{formErrors.lastname2.message}</p>
+            )}
 
-            <label htmlFor="inputPhoneNumber" className="sr-only">
+            {/* Campo teléfono */}
+            <label htmlFor="phoneNumber" className="sr-only">
               Número de Teléfono
             </label>
             <input
               type="number"
               id="phoneNumber"
               className="form-control mb-3"
-              required=""
+              {...register('phoneNumber', {
+                required: 'Este campo es obligatorio',
+              })}
             />
+            {formErrors.phoneNumber && (
+              <p className="text-danger">{formErrors.phoneNumber.message}</p>
+            )}
+
+            {/* Campo estado */}
             <label htmlFor="inputState" className="sr-only">
               Estado
             </label>
-            <select id="inputState" className="form-control mb-3" required="">
+            <select
+              id="inputState"
+              className="form-control mb-3"
+              {...register('state', { required: 'Selecciona un estado' })}
+            >
               <option value="">Selecciona tu estado</option>
               <option value="Aguascalientes">Aguascalientes</option>
               <option value="Baja California">Baja California</option>
-              <option value="Baja California Sur">Baja California Sur</option>
-              <option value="Campeche">Campeche</option>
-              <option value="Chiapas">Chiapas</option>
-              <option value="Chihuahua">Chihuahua</option>
-              <option value="Ciudad de México">Ciudad de México</option>
-              <option value="Coahuila">Coahuila</option>
-              <option value="Colima">Colima</option>
-              <option value="Durango">Durango</option>
-              <option value="Estado de México">Estado de México</option>
-              <option value="Guanajuato">Guanajuato</option>
-              <option value="Guerrero">Guerrero</option>
-              <option value="Hidalgo">Hidalgo</option>
-              <option value="Jalisco">Jalisco</option>
-              <option value="Michoacán">Michoacán</option>
-              <option value="Morelos">Morelos</option>
-              <option value="Nayarit">Nayarit</option>
-              <option value="Nuevo León">Nuevo León</option>
-              <option value="Oaxaca">Oaxaca</option>
-              <option value="Puebla">Puebla</option>
-              <option value="Querétaro">Querétaro</option>
-              <option value="Quintana Roo">Quintana Roo</option>
-              <option value="San Luis Potosí">San Luis Potosí</option>
-              <option value="Sinaloa">Sinaloa</option>
-              <option value="Sonora">Sonora</option>
-              <option value="Tabasco">Tabasco</option>
-              <option value="Tamaulipas">Tamaulipas</option>
-              <option value="Tlaxcala">Tlaxcala</option>
-              <option value="Veracruz">Veracruz</option>
-              <option value="Yucatán">Yucatán</option>
-              <option value="Zacatecas">Zacatecas</option>
+              {/* Más opciones */}
             </select>
+            {formErrors.state && (
+              <p className="text-danger">{formErrors.state.message}</p>
+            )}
 
-            <label htmlFor="inputMiddleName" className="sr-only">
-              Codigo Postal
+            {/* Campo ciudad */}
+            <label htmlFor="city" className="sr-only">
+              Ciudad
             </label>
             <input
-              type="number"
+              type="text"
               id="city"
               className="form-control mb-3"
-              required=""
+              {...register('city', { required: 'Este campo es obligatorio' })}
             />
+            {formErrors.city && (
+              <p className="text-danger">{formErrors.city.message}</p>
+            )}
 
-            <label htmlFor="inputMiddleName" className="sr-only">
+            {/* Campo cédula profesional */}
+            <label htmlFor="license" className="sr-only">
               Cedúla Profesional
             </label>
             <input
               type="number"
               id="license"
               className="form-control mb-3"
-              required=""
+              {...register('license', {
+                required: 'Este campo es obligatorio',
+              })}
             />
+            {formErrors.license && (
+              <p className="text-danger">{formErrors.license.message}</p>
+            )}
 
-            <label htmlFor="inputEmail" className="sr-only">
+            {/* Campo correo electrónico */}
+            <label htmlFor="email" className="sr-only">
               Correo electrónico
             </label>
             <input
               type="email"
               id="email"
               className="form-control mb-3"
-              required="true"
+              {...register('email', { required: 'Este campo es obligatorio' })}
             />
+            {formErrors.email && (
+              <p className="text-danger">{formErrors.email.message}</p>
+            )}
 
-            <label htmlFor="inputPassword" className="sr-only">
+            {/* Campo contraseña */}
+            <label htmlFor="password" className="sr-only">
               Contraseña
             </label>
             <input
               type="password"
               id="password"
               className="form-control mb-3"
-              required=""
+              {...register('password', {
+                required: 'Este campo es obligatorio',
+              })}
             />
+            {formErrors.password && (
+              <p className="text-danger">{formErrors.password.message}</p>
+            )}
             <p className="text-gray-200">
-              La contraseña debe tener minimo 8 caracteres-
+              La contraseña debe tener mínimo 8 caracteres
             </p>
 
-            <label htmlFor="inputConfirmPassword" className="sr-only">
+            {/* Campo confirmar contraseña */}
+            <label htmlFor="confirmPassword" className="sr-only">
               Confirmar Contraseña
             </label>
             <input
               type="password"
               id="confirmPassword"
               className="form-control mb-3"
-              required=""
+              {...register('confirmPassword', {
+                required: 'Este campo es obligatorio',
+                validate: (value) =>
+                  value === getValues('password') ||
+                  'Las contraseñas no coinciden',
+              })}
             />
+            {formErrors.confirmPassword && (
+              <p className="text-danger">
+                {formErrors.confirmPassword.message}
+              </p>
+            )}
 
+            {/* Mostrar errores */}
             <div className="d-flex flex-column align-items-center">
               <p className="text-danger">{errors}</p>
               <button className="btn btn-lg btn-primary mb-2" type="submit">

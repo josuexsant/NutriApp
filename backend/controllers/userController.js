@@ -1,18 +1,60 @@
-import bcrypt from "bcrypt";
-import Nutriologo from "../models/Nutriologo.js";
-import Paciente from "../models/Paciente.js";
+const bcrypt = require("bcrypt");
+const Nutriologo = require("../models/Nutriologo");
+const Paciente = require("../models/Paciente");
 
 // Registro para nutriólogos
-export const nutriologoRegister = async (req, res) => {
-  const { name, lastname1, lastname2, phoneNumber, state, city, license, email, password, confirmPassword } = req.body;
+const nutriologoRegister = async (req, res) => {
+  const {
+    name,
+    lastname1,
+    lastname2,
+    phoneNumber,
+    state,
+    city,
+    license,
+    email,
+    password,
+    confirmPassword,
+  } = req.body;
 
   try {
-    if (!name || !lastname1 || !lastname2 || !phoneNumber || !state || !city || !license || !email || !password || !confirmPassword) {
+    if (
+      !name ||
+      !lastname1 ||
+      !lastname2 ||
+      !phoneNumber ||
+      !state ||
+      !city ||
+      !license ||
+      !email ||
+      !password ||
+      !confirmPassword
+    ) {
       return res.status(400).json({ message: "Todos los campos son obligatorios" });
     }
 
     if (password !== confirmPassword) {
       return res.status(400).json({ message: "Las contraseñas no coinciden" });
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ message: "El correo electrónico no es válido" });
+    }
+
+    const existingNutriologo = await Nutriologo.findOne({
+      where: { Licencia: license },
+    });
+    const existingEmail = await Nutriologo.findOne({
+      where: { Correo: email },
+    });
+
+    if (existingNutriologo) {
+      return res.status(400).json({ message: "La licencia ya está registrada" });
+    }
+
+    if (existingEmail) {
+      return res.status(400).json({ message: "El correo ya está registrado" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -29,7 +71,10 @@ export const nutriologoRegister = async (req, res) => {
       Contrasena: hashedPassword,
     });
 
-    res.status(201).json({ message: "Nutriólogo registrado exitosamente", data: newNutriologo });
+    res.status(201).json({
+      message: "Nutriólogo registrado exitosamente",
+      data: newNutriologo,
+    });
   } catch (error) {
     console.error("Error al registrar nutriólogo:", error);
     res.status(500).json({ message: "Error interno del servidor" });
@@ -37,11 +82,33 @@ export const nutriologoRegister = async (req, res) => {
 };
 
 // Registro para pacientes
-export const pacienteRegister = async (req, res) => {
-  const { name, lastname1, lastname2, birthDate, height, weight, email, password, confirmPassword, phoneNumber } = req.body;
+const pacienteRegister = async (req, res) => {
+  const {
+    name,
+    lastname1,
+    lastname2,
+    birthDate,
+    height,
+    weight,
+    email,
+    password,
+    confirmPassword,
+    phoneNumber,
+  } = req.body;
 
   try {
-    if (!name || !lastname1 || !lastname2 || !birthDate || !height || !weight || !email || !password || !confirmPassword || !phoneNumber) {
+    if (
+      !name ||
+      !lastname1 ||
+      !lastname2 ||
+      !birthDate ||
+      !height ||
+      !weight ||
+      !email ||
+      !password ||
+      !confirmPassword ||
+      !phoneNumber
+    ) {
       return res.status(400).json({ message: "Todos los campos son obligatorios" });
     }
 
@@ -63,9 +130,17 @@ export const pacienteRegister = async (req, res) => {
       Telefono: phoneNumber,
     });
 
-    res.status(201).json({ message: "Paciente registrado exitosamente", data: newPaciente });
+    res.status(201).json({
+      message: "Paciente registrado exitosamente",
+      data: newPaciente,
+    });
   } catch (error) {
     console.error("Error al registrar paciente:", error);
     res.status(500).json({ message: "Error interno del servidor" });
   }
+};
+
+module.exports = {
+  nutriologoRegister,
+  pacienteRegister,
 };

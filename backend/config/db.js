@@ -1,4 +1,4 @@
-import { Sequelize } from "sequelize";
+const { Sequelize } = require("sequelize");
 
 // Configuración de la conexión con Sequelize
 const sequelize = new Sequelize("ssa", "root", "1234", {
@@ -8,11 +8,13 @@ const sequelize = new Sequelize("ssa", "root", "1234", {
 });
 
 // Verificar la conexión
-try {
-  await sequelize.authenticate();
-  console.log("Conexión a la base de datos establecida correctamente.");
-} catch (error) {
-  console.error("Error al conectar con la base de datos:", error);
-}
+(async () => {
+  try {
+    await sequelize.authenticate();
+    console.log("Conexión a la base de datos establecida correctamente.");
+  } catch (error) {
+    console.error("Error al conectar con la base de datos:", error);
+  }
+})();
 
-export default sequelize;
+module.exports = sequelize;
