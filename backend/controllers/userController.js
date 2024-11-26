@@ -38,18 +38,23 @@ export const Login = async (req, res) => {
 };
 
 const registerUser = async (req, res) => {
-	User.create({
-		Nombre: req.body.nombre,
-		Apellidos: req.body.apellidos,
-		Correo: req.body.correo,
-		Contrasena: req.body.contrasena,
-		Telefono: req.body.telefono,
-	})
-		.then(() => {
-			res.status(201).json({ message: "Usuario registrado exitosamente" });
-		})
-		.catch((error) => {
-			console.error(error);
-			res.status(500).json({ message: "Error al registrar el usuario" });
-		});
+	// email = req.body.email;
+	// password = req.body.password;
+	// try {
+	// 	const connection = await mysql.createConnection(dbConfig);
+	// 	const [results] = await connection.execute("CALL verificarCredenciales(?, ?)", [email, password]);
+	// 	const usuario = results[0][0];
+	// 	if (usuario && usuario.id) {
+	// 		//aqui generamos y guardamos el token
+	// 		const token = jwt.sign(
+	// 			{ usuario_id: usuario.id, email: email, password: password },
+	// 			process.env.SECRET_KEY
+	// 		);
+	// 		const [results] = await connection.execute("CALL guardarToken(?, ?)", [usuario.id, token]);
+	// 	} else {
+	// 		throw new Error("Credenciales inválidas");
+	// 	}
+	// } catch (err) {
+	// 	throw new Error("Error al verificar las credenciales: " + err.message);
+	// }
 };

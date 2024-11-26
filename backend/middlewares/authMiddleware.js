@@ -14,7 +14,6 @@ export const authMiddleware = (req, res, next) => {
 		const data = jwt.verify(token, process.env.SECRET_KEY); // Verifica el token
 		req.session.user = {
 			usuario: data.usuario_id,
-			email: data.email,
 		};
 	} catch (error) {
 		console.log("Token inválido:", error); // Para depuración

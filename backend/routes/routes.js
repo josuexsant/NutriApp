@@ -5,9 +5,3 @@ export const router = Router();
 router.post("/register", () => {
 	console.log("endpoint register");
 });
-
-res.cookie("access_token", token, {
-	httpOnly: true,
-	sameSite: "strict",
-	maxAge: 1000 * 60,
-});
