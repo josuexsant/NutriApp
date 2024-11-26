@@ -6,12 +6,13 @@ import {
   Dashboard,
   Home,
   Login,
+  MessagePanel,
   Patient_details,
   PatientsPanel,
+  RegimenTiempos,
   RegimesPanel,
   Register,
   Registerpatient,
-  MessagePanel
 } from './pages/';
 
 const router = createBrowserRouter([
@@ -82,6 +83,14 @@ const router = createBrowserRouter([
   {
     path: "/message-panel",
     element: <MessagePanel/>,
+  },
+  {
+    path: '/Regimen-por-tiempos',
+    element: (
+      <ProtectedRoute>
+        <RegimenTiempos />
+      </ProtectedRoute>
+    ),
   },
 ]);
 

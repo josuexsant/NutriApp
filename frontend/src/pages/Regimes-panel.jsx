@@ -1,8 +1,12 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Button, Container, Row, Col } from 'react-bootstrap';
+import { Button, Col, Container, Row } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import { MainLayout } from '../layouts/MainLayout';
 
 export const RegimesPanel = () => {
+  const navigate = useNavigate();
+
+
   // Datos de prueba para los regímenes
   const regimenes = [
     { id: 1, nombre: 'Regimen 1' },
@@ -20,7 +24,7 @@ export const RegimesPanel = () => {
             <Button variant="secondary" className="me-2">
               Archivados
             </Button>
-            <Button variant="secondary">Añadir</Button>
+            <Button onClick={() => navigate('/Regimen-por-tiempos')} variant="secondary">Añadir</Button>
           </Col>
         </Row>
 

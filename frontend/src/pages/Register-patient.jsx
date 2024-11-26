@@ -1,11 +1,13 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { MainLayout } from "../layouts/MainLayout";
 import './css/style_PatientRegister.css';
-
-
+ 
 export const Registerpatient = () => {
-
+ 
+  const navigate = useNavigate();
+ 
   const [formData, setFormData] = useState({
     nombre: "",
     apellidos: "",
@@ -17,7 +19,7 @@ export const Registerpatient = () => {
     genero: "",
     actividadFisica: ""
   });
-
+ 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -25,13 +27,40 @@ export const Registerpatient = () => {
       [name]: value
     });
   };
-
-  const handleSubmit = (e) => {
+ 
+  const [errors, setErrors] = useState('');
+ 
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Aquí puedes manejar el envío del formulario, como enviarlo a un servidor
     console.log("Datos del formulario:", formData);
+    //Lógica para añadir el nuevo paciente a la base de datos
+    /*
+    try {
+      const response = await fetch('/api/nutriologo/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+ 
+      const data = await response.json();
+ 
+      if (response.ok) {
+        setMessage('Paciente registrado exitosamente');
+        // Aquí puedes redirigir o limpiar el formulario
+      } else {
+        setMessage(data.message || 'Error al registrar');
+      }
+    } catch (error) {
+      console.error('Error al conectar con la API:', error);
+      setMessage('Error al registrar. Inténtalo de nuevo.');
+    }
+    */
+    navigate("/Patients-panel");
   };
-
+ 
   return(
     <MainLayout>
       <br></br>
@@ -65,7 +94,7 @@ export const Registerpatient = () => {
               />
             </div>
           </div>
-
+ 
           {/* Fila de Apellido Materno y Fecha de Nacimiento */}
           <div className="row">
             <div className="col-md-6 mb-3">
@@ -93,7 +122,7 @@ export const Registerpatient = () => {
               />
             </div>
           </div>
-
+ 
           {/* Fila de Género y Correo */}
           <div className="row">
             <div className="col-md-6 mb-3">
@@ -144,7 +173,7 @@ export const Registerpatient = () => {
               />
             </div>
           </div>
-
+ 
           {/* Fila de Contraseña y Altura */}
           <div className="row">
             <div className="col-md-6 mb-3">
@@ -172,7 +201,7 @@ export const Registerpatient = () => {
               />
             </div>
           </div>
-
+ 
           {/* Fila de Peso y Actividad Física */}
           <div className="row">
             <div className="col-md-6 mb-3">
@@ -204,7 +233,7 @@ export const Registerpatient = () => {
               </select>
             </div>
           </div>
-
+ 
           {/* Botón de Registrar centrado */}
           <div className="text-center">
             <button type="submit" className="btn btn-primary btn-lg mt-3">
@@ -214,7 +243,7 @@ export const Registerpatient = () => {
         </form>
       </div>
     </MainLayout>
-  ); 
+  );
 }
-
+ 
 export default Registerpatient;

@@ -1,0 +1,31 @@
+.custom-navbar.navbar {
+  background: linear-gradient(135deg, #134467, #1e598f) !important;
+  color: #ffffff !important;
+}
+
+.custom-navbar .navbar-nav a {
+  color: #ffffff !important;
+}
+
+.custom-navbar .bi {
+  color: #ffffff; 
+}
+
+.custom-footer {
+  background: linear-gradient(135deg, #134467, #1e598f) !important; 
+  color: #fff !important;
+  padding: 16px 0 !important; 
+  text-align: center !important; 
+  bottom: 0 !important;
+  width: 100% !important;
+}
+
+.custom-footer a {
+  color: #fff !important; 
+  text-decoration: none !important; 
+  padding: 0 10px !important;
+}
+
+.custom-footer a:hover {
+  text-decoration: underline !important; 
+}
