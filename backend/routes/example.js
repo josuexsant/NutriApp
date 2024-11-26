@@ -24,3 +24,4 @@ export const logout = () => {
   console.log("user logged out");
   return "user logged out";
 };
+
