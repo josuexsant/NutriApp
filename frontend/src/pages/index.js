@@ -5,9 +5,10 @@ export { Archived_patient } from './Archived-patient';
 export { Dashboard } from './Dashboard';
 export { Home } from './Home';
 export { Login } from './Login';
-export { PatientsPanel } from './Patients-panel'; // Añadido
+export { MessagePanel } from "./Message-Panel";
 export { Patient_details } from './Patient-details';
-export { Registerpatient } from './Register-patient';
+export { PatientsPanel } from './Patients-panel'; // Añadido
+export { RegimenTiempos } from './Regimen-por-tiempos';
 export { RegimesPanel } from './Regimes-panel'; // Añadido
 export { Register } from './Register';
-export { MessagePanel } from "./Message-Panel";
+export { Registerpatient } from './Register-patient';

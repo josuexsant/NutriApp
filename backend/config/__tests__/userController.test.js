@@ -1,6 +1,8 @@
-const { nutriologoRegister, pacienteRegister } = require("../../controllers/userController");
+const { nutriologoRegister, pacienteRegister } = require("../../controllers/nutriologoController");
 const Nutriologo = require("../../models/Nutriologo");
-const Paciente = require("../../models/Paciente");
+
+//Descomentar para pacientes
+//const Paciente = require("../../../models/Paciente");
 
 // Mockear los modelos para evitar interacciones reales con la base de datos
 jest.mock("../../models/Nutriologo.js");

@@ -1,5 +1,7 @@
 import express from "express";
-import { nutriologoRegister, pacienteRegister } from "../controllers/userController.js";
+import { registrarCalorias } from "../controllers/caloriasController.js";
+import { nutriologoRegister} from "../controllers/nutriologoController.js";
+import { pacienteRegister} from "../controllers/pacienteController.js"
 
 export const router = express.Router();
 
@@ -8,5 +10,8 @@ router.post("/register/nutriologo", nutriologoRegister);
 
 // Ruta para registrar un paciente
 router.post("/register/paciente", pacienteRegister);
+
+// Ruta para registrar calorías
+router.post("/calorias", registrarCalorias);
 
 export default router;

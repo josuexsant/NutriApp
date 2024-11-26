@@ -4,6 +4,12 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png';
 import { MainLayout } from '../layouts/MainLayout';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import logo from '../assets/logo.png';
+import { MainLayout } from '../layouts/MainLayout';
 
 export const Register = () => {
   const navigate = useNavigate();
@@ -50,7 +56,10 @@ export const Register = () => {
       <div
         className="d-flex justify-content-center align-items-center min-h-screen"
         style={{ backgroundColor: '#f8f9fa' }}
+        style={{ backgroundColor: '#f8f9fa' }}
       >
+        <div className="card p-4" style={{ width: '400px' }}>
+          <form className="form-signin" onSubmit={handleSubmit(onSubmit)}>
         <div className="card p-4" style={{ width: '400px' }}>
           <form className="form-signin" onSubmit={handleSubmit(onSubmit)}>
             <h1 className="h3 mb-3 font-weight-normal text-center">NutriApp</h1>
@@ -67,6 +76,8 @@ export const Register = () => {
 
             {/* Campo nombre */}
             <label htmlFor="name" className="sr-only">
+            {/* Campo nombre */}
+            <label htmlFor="name" className="sr-only">
               Nombre
             </label>
             <input
@@ -74,11 +85,17 @@ export const Register = () => {
               id="name"
               className="form-control mb-3"
               {...register('name', { required: 'Este campo es obligatorio' })}
+              {...register('name', { required: 'Este campo es obligatorio' })}
             />
             {formErrors.name && (
               <p className="text-danger">{formErrors.name.message}</p>
             )}
+            {formErrors.name && (
+              <p className="text-danger">{formErrors.name.message}</p>
+            )}
 
+            {/* Campo apellido paterno */}
+            <label htmlFor="lastname1" className="sr-only">
             {/* Campo apellido paterno */}
             <label htmlFor="lastname1" className="sr-only">
               Apellido Paterno
@@ -90,11 +107,19 @@ export const Register = () => {
               {...register('lastname1', {
                 required: 'Este campo es obligatorio',
               })}
+              {...register('lastname1', {
+                required: 'Este campo es obligatorio',
+              })}
             />
             {formErrors.lastname1 && (
               <p className="text-danger">{formErrors.lastname1.message}</p>
             )}
+            {formErrors.lastname1 && (
+              <p className="text-danger">{formErrors.lastname1.message}</p>
+            )}
 
+            {/* Campo apellido materno */}
+            <label htmlFor="lastname2" className="sr-only">
             {/* Campo apellido materno */}
             <label htmlFor="lastname2" className="sr-only">
               Apellido Materno
@@ -141,11 +166,20 @@ export const Register = () => {
               className="form-control mb-3"
               {...register('state', { required: 'Selecciona un estado' })}
             >
+            <select
+              id="inputState"
+              className="form-control mb-3"
+              {...register('state', { required: 'Selecciona un estado' })}
+            >
               <option value="">Selecciona tu estado</option>
               <option value="Aguascalientes">Aguascalientes</option>
               <option value="Baja California">Baja California</option>
               {/* Más opciones */}
+              {/* Más opciones */}
             </select>
+            {formErrors.state && (
+              <p className="text-danger">{formErrors.state.message}</p>
+            )}
             {formErrors.state && (
               <p className="text-danger">{formErrors.state.message}</p>
             )}
@@ -153,13 +187,21 @@ export const Register = () => {
             {/* Campo ciudad */}
             <label htmlFor="city" className="sr-only">
               Ciudad
+            {/* Campo ciudad */}
+            <label htmlFor="city" className="sr-only">
+              Ciudad
             </label>
             <input
+              type="text"
               type="text"
               id="city"
               className="form-control mb-3"
               {...register('city', { required: 'Este campo es obligatorio' })}
+              {...register('city', { required: 'Este campo es obligatorio' })}
             />
+            {formErrors.city && (
+              <p className="text-danger">{formErrors.city.message}</p>
+            )}
             {formErrors.city && (
               <p className="text-danger">{formErrors.city.message}</p>
             )}
@@ -194,11 +236,17 @@ export const Register = () => {
               id="email"
               className="form-control mb-3"
               {...register('email', { required: 'Este campo es obligatorio' })}
+              {...register('email', { required: 'Este campo es obligatorio' })}
             />
             {formErrors.email && (
               <p className="text-danger">{formErrors.email.message}</p>
             )}
+            {formErrors.email && (
+              <p className="text-danger">{formErrors.email.message}</p>
+            )}
 
+            {/* Campo contraseña */}
+            <label htmlFor="password" className="sr-only">
             {/* Campo contraseña */}
             <label htmlFor="password" className="sr-only">
               Contraseña
@@ -210,14 +258,23 @@ export const Register = () => {
               {...register('password', {
                 required: 'Este campo es obligatorio',
               })}
+              {...register('password', {
+                required: 'Este campo es obligatorio',
+              })}
             />
+            {formErrors.password && (
+              <p className="text-danger">{formErrors.password.message}</p>
+            )}
             {formErrors.password && (
               <p className="text-danger">{formErrors.password.message}</p>
             )}
             <p className="text-gray-200">
               La contraseña debe tener mínimo 8 caracteres
+              La contraseña debe tener mínimo 8 caracteres
             </p>
 
+            {/* Campo confirmar contraseña */}
+            <label htmlFor="confirmPassword" className="sr-only">
             {/* Campo confirmar contraseña */}
             <label htmlFor="confirmPassword" className="sr-only">
               Confirmar Contraseña
@@ -226,6 +283,20 @@ export const Register = () => {
               type="password"
               id="confirmPassword"
               className="form-control mb-3"
+              {...register('confirmPassword', {
+                required: 'Este campo es obligatorio',
+                validate: (value) =>
+                  value === getValues('password') ||
+                  'Las contraseñas no coinciden',
+              })}
+            />
+            {formErrors.confirmPassword && (
+              <p className="text-danger">
+                {formErrors.confirmPassword.message}
+              </p>
+            )}
+
+            {/* Mostrar errores */}
               {...register('confirmPassword', {
                 required: 'Este campo es obligatorio',
                 validate: (value) =>
