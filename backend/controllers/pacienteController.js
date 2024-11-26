@@ -1,4 +1,5 @@
 import sequelize from '../DataBase.js'; // Ajusta la ruta si es necesario
+import * as auth from '../utils/auth.js'; // Ajusta la ruta si es necesario
 
 // Procedimiento para guardar un paciente
 const guardarPaciente = async (req, res) => {
@@ -13,10 +14,27 @@ const guardarPaciente = async (req, res) => {
     telefono,
     correo_electronico,
     contrasena,
-    token,
   } = req.body;
 
   try {
+    // Verificamos si el correo ya está registrado
+    const [resultado] = await sequelize.query(
+      `CALL verificar_correo_paciente(:correo)`,
+      {
+        replacements: { correo: correo_electronico },
+        type: sequelize.QueryTypes.RAW,
+      }
+    );
+
+    // Si el resultado tiene algún valor, significa que el correo ya existe
+    if (resultado && resultado.length > 0) {
+      return res.status(400).json({ error: 'El correo electrónico ya está en uso.' });
+    }
+
+    // Si el correo no existe, generamos el token
+    const token = await auth.generarToken(correo_electronico, contrasena);
+
+    // Llamamos al procedimiento para guardar el paciente
     await sequelize.query(
       `CALL guardar_paciente(
         :nombres, 
@@ -59,30 +77,6 @@ const guardarPaciente = async (req, res) => {
   }
 };
 
-// Procedimiento para verificar la unicidad del correo electrónico
-const verificarCorreoPaciente = async (req, res) => {
-  const { correo } = req.body;
-
-  try {
-    await sequelize.query(
-      `CALL verificar_correo_paciente(:correo)`,
-      {
-        replacements: { correo },
-        type: sequelize.QueryTypes.RAW,
-      }
-    );
-
-    res.status(200).json({ message: 'El correo es único y válido.' });
-  } catch (error) {
-    if (error.original && error.original.sqlMessage) {
-      res.status(400).json({ error: error.original.sqlMessage });
-    } else {
-      res.status(500).json({ error: 'Error interno del servidor.' });
-    }
-  }
-};
-
 export default {
   guardarPaciente,
-  verificarCorreoPaciente,
 };

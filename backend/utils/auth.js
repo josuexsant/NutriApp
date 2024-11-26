@@ -2,8 +2,8 @@ import jwt from "jsonwebtoken";
 import sequelize from "../DataBase.js"; // Ajusta la ruta si es necesario
 
 //crea token y lo alamacena en la bd
-export const generarToken = async (usuario_id, email, password) => {
-	const token = jwt.sign({ usuario_id: usuario_id, email: email, password: password }, process.env.SECRET_KEY);
+export const generarToken = async (email, password) => {
+	const token = jwt.sign({ email: email, password: password }, process.env.SECRET_KEY);
 	return token;
 };
 
