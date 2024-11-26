@@ -16,45 +16,43 @@ export const Register = () => {
   } = useForm();
 
   // Función para manejar el envío del formulario
-// Función para manejar el envío del formulario
-const onSubmit = async (formData) => {
-  if (formData.password !== formData.confirmPassword) {
-    setErrors('Las contraseñas no coinciden');
-    return;
-  }
-
-  try {
-    const response = await fetch('/api/nutriologo/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-      setErrors('Nutriólogo registrado exitosamente');
-      navigate('/login'); // Redirige al login tras el registro
-    } else {
-      setErrors(data.message || 'Error al registrar');
+  const onSubmit = async (formData) => {
+    if (formData.password !== formData.confirmPassword) {
+      setErrors('Las contraseñas no coinciden');
+      return;
     }
-  } catch (error) {
-    console.error('Error al conectar con la API:', error);
-    setErrors('Error al registrar. Inténtalo de nuevo.');
-  }
-};
 
+    try {
+      const response = await fetch('/api/nutriologo/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
 
-return (
-  <MainLayout>
-    <div
-      className="d-flex justify-content-center align-items-center min-h-screen"
-      style={{ backgroundColor: '#f8f9fa' }}
-    >
-      <div className="card p-4" style={{ width: '400px' }}>
-        <form className="form-signin" onSubmit={handleSubmit(onSubmit)}>
+      const data = await response.json();
+
+      if (response.ok) {
+        setErrors('Nutriólogo registrado exitosamente');
+        navigate('/login'); // Redirige al login tras el registro
+      } else {
+        setErrors(data.message || 'Error al registrar');
+      }
+    } catch (error) {
+      console.error('Error al conectar con la API:', error);
+      setErrors('Error al registrar. Inténtalo de nuevo.');
+    }
+  };
+
+  return (
+    <MainLayout>
+      <div
+        className="d-flex justify-content-center align-items-center min-h-screen"
+        style={{ backgroundColor: '#f8f9fa' }}
+      >
+        <div className="card p-4" style={{ width: '400px' }}>
+          <form className="form-signin" onSubmit={handleSubmit(onSubmit)}>
             <h1 className="h3 mb-3 font-weight-normal text-center">NutriApp</h1>
             <img
               className="mb-4 mx-auto d-block"
@@ -118,11 +116,16 @@ return (
               Número de Teléfono
             </label>
             <input
-              type="number"
+              type="text"
               id="phoneNumber"
               className="form-control mb-3"
               {...register('phoneNumber', {
                 required: 'Este campo es obligatorio',
+                pattern: {
+                  value: /^[0-9]{10}$/,
+                  message:
+                    'El número de teléfono debe tener exactamente 10 dígitos',
+                },
               })}
             />
             {formErrors.phoneNumber && (
@@ -163,14 +166,19 @@ return (
 
             {/* Campo cédula profesional */}
             <label htmlFor="license" className="sr-only">
-              Cedúla Profesional
+              Cédula Profesional
             </label>
             <input
-              type="number"
+              type="text"
               id="license"
               className="form-control mb-3"
               {...register('license', {
                 required: 'Este campo es obligatorio',
+                pattern: {
+                  value: /^[0-9]{10}$/,
+                  message:
+                    'La cédula profesional debe tener exactamente 10 dígitos',
+                },
               })}
             />
             {formErrors.license && (
