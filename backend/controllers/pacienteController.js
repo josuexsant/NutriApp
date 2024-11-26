@@ -1,4 +1,4 @@
-import sequelize from '../DataBase.js'; // Ajusta la ruta si es necesario
+import sequelize from '../models/DataBase.js'; // Ajusta la ruta si es necesario
 
 // Procedimiento para guardar un paciente
 const guardarPaciente = async (req, res) => {
