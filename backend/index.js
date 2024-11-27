@@ -1,5 +1,6 @@
 import express from "express";
-import { router } from "./routes/routes.js"; // Ensure the correct path
+import cors from "cors";
+import { router } from "./routes/routes.js"; // Asegúrate de que la ruta sea correcta
 import dotenv from "dotenv";
 import { authMiddleware } from "./middlewares/authMiddleware.js"; // Importa el middleware
 
@@ -10,6 +11,12 @@ const app = express();
 app.use(express.json());
 app.use(authMiddleware);
 app.use(express.urlencoded({ extended: false }));
+
+app.use(cors({
+	origin: 'http://localhost:5173', // Cambia al puerto correcto de tu app React
+	methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+	credentials: true
+}));
 
 app.use("/", router);
 

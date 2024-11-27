@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js"; // Importa el JS de Bootstrap
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { MainLayout } from "../layouts/MainLayout";
 import "./css/style_dashboard.css";
@@ -10,14 +10,20 @@ export const Dashboard = () => {
 
   // TODO: Hacer api de estos datos
   // Datos de ejemplo para los pacientes
-  const [patients, setPatients] = useState([
-    { id: 1, name: "Paciente 1" },
-    { id: 2, name: "Paciente 2" },
-    { id: 3, name: "Paciente 3" },
-    { id: 4, name: "Paciente 4" },
-    { id: 5, name: "Paciente 5" },
-    { id: 6, name: "Paciente 6" },
-  ]);
+  const [patients, setPatients] = useState([]);
+
+  useEffect(() => {
+    const fetchPatients = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:3000/getPatients');
+        const data = await response.json();
+        setPatients(data);
+      } catch (error) {
+        console.error("Error fetching patients:", error);
+      }
+    };
+    fetchPatients();
+  }, []);
 
   // Opciones del menú desplegable
   const menuOptions = [
