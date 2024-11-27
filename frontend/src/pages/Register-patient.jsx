@@ -3,11 +3,13 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MainLayout } from "../layouts/MainLayout";
 import './css/style_PatientRegister.css';
- 
+import { toast } from "react-hot-toast";
+
+
 export const Registerpatient = () => {
- 
+
   const navigate = useNavigate();
- 
+
   const [formData, setFormData] = useState({
     nombre: "",
     apellidos: "",
@@ -17,7 +19,8 @@ export const Registerpatient = () => {
     correo: "",
     contraseña: "",
     genero: "",
-    actividadFisica: ""
+    actividadFisica: "",
+    telefono: ""
   });
  
   const handleChange = (e) => {
@@ -27,9 +30,9 @@ export const Registerpatient = () => {
       [name]: value
     });
   };
- 
+
   const [errors, setErrors] = useState('');
- 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Aquí puedes manejar el envío del formulario, como enviarlo a un servidor
@@ -44,9 +47,9 @@ export const Registerpatient = () => {
         },
         body: JSON.stringify(formData),
       });
- 
+
       const data = await response.json();
- 
+
       if (response.ok) {
         setMessage('Paciente registrado exitosamente');
         // Aquí puedes redirigir o limpiar el formulario
@@ -55,21 +58,28 @@ export const Registerpatient = () => {
       }
     } catch (error) {
       console.error('Error al conectar con la API:', error);
+      toast.error("Error al registrar el usuario");
       setMessage('Error al registrar. Inténtalo de nuevo.');
     }
     */
+    toast.success("¡Paciente agregado exitosamente!", {
+      position: "top-center",
+      style: {
+        background: "black",
+        color: "white",
+      },
+    });
     navigate("/Patients-panel");
   };
  
   return(
     <MainLayout>
-      <br></br>
-      <div className="container mt-5 fondo">
+      <div className="container p-5 fondo">
         <h2 className="text-center mb-4">Formulario de Registro</h2>
         <form onSubmit={handleSubmit}>
           {/* Fila de Nombre y Apellido Paterno */}
           <div className="row">
-            <div className="col-md-6 mb-3">
+            <div className="col-md-4 mb-3">
               <label htmlFor="nombre">Nombre</label>
               <input
                 type="text"
@@ -81,7 +91,7 @@ export const Registerpatient = () => {
                 required
               />
             </div>
-            <div className="col-md-6 mb-3">
+            <div className="col-md-4 mb-3">
               <label htmlFor="apellidoPaterno">Apellido Paterno</label>
               <input
                 type="text"
@@ -93,11 +103,7 @@ export const Registerpatient = () => {
                 required
               />
             </div>
-          </div>
- 
-          {/* Fila de Apellido Materno y Fecha de Nacimiento */}
-          <div className="row">
-            <div className="col-md-6 mb-3">
+            <div className="col-md-4 mb-3">
               <label htmlFor="apellidoMaterno">Apellido Materno</label>
               <input
                 type="text"
@@ -109,7 +115,11 @@ export const Registerpatient = () => {
                 required
               />
             </div>
-            <div className="col-md-6 mb-3">
+          </div>
+
+          {/* Fila de Apellido Materno y Fecha de Nacimiento */}
+          <div className="row">
+            <div className="col-md-4 mb-3">
               <label htmlFor="fechaNacimiento">Fecha de Nacimiento</label>
               <input
                 type="date"
@@ -117,6 +127,30 @@ export const Registerpatient = () => {
                 id="fechaNacimiento"
                 name="fechaNacimiento"
                 value={formData.fechaNacimiento}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="col-md-4 mb-3">
+              <label htmlFor="peso">Peso (kg)</label>
+              <input
+                type="number"
+                className="form-control"
+                id="peso"
+                name="peso"
+                value={formData.peso}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="col-md-4 mb-3">
+              <label htmlFor="altura">Altura (cm)</label>
+              <input
+                type="number"
+                className="form-control"
+                id="altura"
+                name="altura"
+                value={formData.altura}
                 onChange={handleChange}
                 required
               />
@@ -176,47 +210,19 @@ export const Registerpatient = () => {
  
           {/* Fila de Contraseña y Altura */}
           <div className="row">
-            <div className="col-md-6 mb-3">
-              <label htmlFor="contraseña">Contraseña</label>
-              <input
-                type="password"
-                className="form-control"
-                id="contraseña"
-                name="contraseña"
-                value={formData.contraseña}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className="col-md-6 mb-3">
-              <label htmlFor="altura">Altura (cm)</label>
+          <div className="col-md-4 mb-3">
+              <label htmlFor="telefomo">Telefono</label>
               <input
                 type="number"
                 className="form-control"
-                id="altura"
-                name="altura"
-                value={formData.altura}
+                id="telefono"
+                name="telefono"
+                value={formData.telefono}
                 onChange={handleChange}
                 required
               />
             </div>
-          </div>
- 
-          {/* Fila de Peso y Actividad Física */}
-          <div className="row">
-            <div className="col-md-6 mb-3">
-              <label htmlFor="peso">Peso (kg)</label>
-              <input
-                type="number"
-                className="form-control"
-                id="peso"
-                name="peso"
-                value={formData.peso}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className="col-md-6 mb-3">
+          <div className="col-md-8 mb-3">
               <label htmlFor="actividadFisica">Actividad Física</label>
               <select
                 className="form-control"
@@ -233,11 +239,39 @@ export const Registerpatient = () => {
               </select>
             </div>
           </div>
- 
+
+          {/* Fila de Peso y Actividad Física */}
+          <div className="row">
+          <div className="col-md-4 mb-3">
+              <label htmlFor="contraseña">Contraseña</label>
+              <input
+                type="password"
+                className="form-control"
+                id="contraseña"
+                name="contraseña"
+                value={formData.contraseña}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="col-md-4 mb-3">
+              <label htmlFor="contraseña">Confirmar Contraseña</label>
+              <input
+                type="password"
+                className="form-control"
+                id="contraseña"
+                name="contraseña"
+                value={formData.contraseña}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          </div>
+
           {/* Botón de Registrar centrado */}
           <div className="text-center">
             <button type="submit" className="btn btn-primary btn-lg mt-3">
-              Registrar
+              Agregar paciente
             </button>
           </div>
         </form>
