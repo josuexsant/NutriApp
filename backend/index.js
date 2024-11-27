@@ -5,7 +5,12 @@ const app = express();
 app.use(express.json());
 
 // Usar las rutas definidas
-app.use("/api", routes);
+app.use("/api", routes); // Todas las rutas de la API comenzarán con '/api'
+
+// Endpoint raíz para verificar si el servidor está funcionando (opcional)
+app.get("/", (req, res) => {
+  res.send("Servidor corriendo correctamente");
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

@@ -1,17 +1,15 @@
 const { Sequelize } = require("sequelize");
 
-// Configuración de la conexión con Sequelize
-const sequelize = new Sequelize("ssa", "root", "1234", {
-  host: "localhost",
-  dialect: "mysql", // Dialecto de la base de datos (MySQL en este caso)
-  logging: false,   // Opcional: desactiva el logging de consultas SQL en consola
+const sequelize = new Sequelize("nombre_base_datos", "usuario", "contraseña", {
+  host: "127.0.0.1", // o la dirección IP de tu base de datos
+  dialect: "mysql",  // o el dialecto correspondiente
+  logging: false,    // Opcional: desactiva los logs de SQL
 });
 
-// Verificar la conexión
 (async () => {
   try {
     await sequelize.authenticate();
-    console.log("Conexión a la base de datos establecida correctamente.");
+    console.log("Conexión a la base de datos exitosa");
   } catch (error) {
     console.error("Error al conectar con la base de datos:", error);
   }
