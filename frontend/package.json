@@ -2,7 +2,7 @@
   "name": "nutriapp",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
+ 
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -18,7 +18,8 @@
     "react-bootstrap": "^2.10.5",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.21.0",
-    "react-router-dom": "^6.27.0"
+    "react-router-dom": "^6.27.0",
+    "selenium-webdriver": "^4.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
