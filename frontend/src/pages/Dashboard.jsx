@@ -15,8 +15,8 @@ export const Dashboard = () => {
     { id: 2, name: "Paciente 2" },
     { id: 3, name: "Paciente 3" },
     { id: 4, name: "Paciente 4" },
-    { id: 3, name: "Paciente 5" },
-    { id: 4, name: "Paciente 6" },
+    { id: 5, name: "Paciente 5" },
+    { id: 6, name: "Paciente 6" },
   ]);
 
   // Opciones del menú desplegable
