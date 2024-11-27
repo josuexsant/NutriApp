@@ -68,7 +68,7 @@ CREATE TABLE nutriologo_sesion (
 	FOREIGN KEY (id_nutriologo) REFERENCES nutriologo(id_nutriologo)
 );
 
----- tabla tokens_nutriologos
+-- tabla tokens_nutriologos
 CREATE TABLE tokens_nutriologos (
     id_token INT AUTO_INCREMENT PRIMARY KEY,
     id_sesion_nutriologo INT NOT NULL,
@@ -76,10 +76,88 @@ CREATE TABLE tokens_nutriologos (
     FOREIGN KEY (id_sesion_nutriologo) REFERENCES nutriologo_sesion(id_nutriologo_sesion)
 );
 
----- tabla tokens_nutriologos
+-- tabla tokens_nutriologos
 CREATE TABLE tokens_paciente (
     id_token INT AUTO_INCREMENT PRIMARY KEY,
     id_sesion_paciente INT NOT NULL,
     token VARCHAR(255) NOT NULL,
     FOREIGN KEY (id_sesion_paciente) REFERENCES paciente_sesion(id_paciente_sesion)
+);
+
+
+
+
+-- Crear tabla regimen_por_tiempos
+CREATE TABLE regimen_por_tiempos (
+    id INT AUTO_INCREMENT PRIMARY KEY,                         
+    paciente_id INT,                            
+    limite_calorias DECIMAL(10, 2),             
+    FOREIGN KEY (paciente_id) REFERENCES paciente(id_paciente) 
+);
+
+-- Crear tabla tiempos_comida
+CREATE TABLE tiempos_comida (
+    id INT AUTO_INCREMENT PRIMARY KEY,                        
+    regimen_id INT,                             
+    nombre_tiempo VARCHAR(50),                  
+    FOREIGN KEY (regimen_id) REFERENCES regimen_por_tiempos(id) 
+);
+
+-- Crear tabla calorias_por_grupo
+CREATE TABLE calorias_por_grupo (
+    id INT AUTO_INCREMENT PRIMARY KEY,                         
+    regimen_id INT,                             
+    grupo VARCHAR(50),                          
+    total_calorias DECIMAL(10, 2),              
+    FOREIGN KEY (regimen_id) REFERENCES regimen_por_tiempos(id)
+);
+
+-- Crear tabla alimentos_tiempos
+CREATE TABLE alimentos_tiempos (
+    id INT AUTO_INCREMENT PRIMARY KEY,                         
+    tiempo_id INT,                              
+    calorias_por_grupo_id INT,                  
+    alimento_principal VARCHAR(100),             
+    alternativa_1 VARCHAR(100),                 
+    alternativa_2 VARCHAR(100),                 
+    FOREIGN KEY (tiempo_id) REFERENCES tiempos_comida(id),      
+    FOREIGN KEY (calorias_por_grupo_id) REFERENCES calorias_por_grupo(id)
+);
+
+
+
+
+
+-- Crear tabla regimen_consumo_diario
+CREATE TABLE regimen_consumo_diario (
+    id INT AUTO_INCREMENT PRIMARY KEY,                         
+    paciente_id INT,                                        
+    FOREIGN KEY (paciente_id) REFERENCES paciente(id_paciente) 
+);
+
+-- Crear tabla dias
+CREATE TABLE dias (
+    id INT AUTO_INCREMENT PRIMARY KEY,                                                    
+    dia VARCHAR(50),
+    limite_calorias DECIMAL(10, 2)                  
+);
+
+-- Crear tabla calorias_por_grupo
+CREATE TABLE calorias_por_grupo_diario (
+    id INT AUTO_INCREMENT PRIMARY KEY,                         
+    grupo VARCHAR(50),                          
+    total_calorias DECIMAL(10, 2),              
+    FOREIGN KEY (regimen_id) REFERENCES regimen_consumo_diario(id)
+);
+
+-- Crear tabla alimentos_tiempos
+CREATE TABLE alimentos_tiempos (
+    id INT AUTO_INCREMENT PRIMARY KEY,                         
+    dia_id INT,                              
+    calorias_por_grupo_id INT,                  
+    alimento_principal VARCHAR(100),             
+    alternativa_1 VARCHAR(100),                 
+    alternativa_2 VARCHAR(100),                 
+    FOREIGN KEY (calorias_por_grupo_id) REFERENCES calorias_por_grupo_diario(id),
+    FOREIGN KEY (dia_id) REFERENCES dias(id)
 );
