@@ -28,7 +28,7 @@ export const RegimesPanel = () => {
                 </button>
                 <button
                   className="btn btn-outline-dark mx-2"
-                  onClick={() => handleButtonClick('/home')}
+                  onClick={() => handleButtonClick('/register_regimenescd')}
                 >
                   Consumo diario
                 </button>
