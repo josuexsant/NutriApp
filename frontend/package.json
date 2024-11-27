@@ -15,10 +15,12 @@
     "boostrap": "^2.0.0",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
+    "nutriapp": "file:",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.5",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.21.0",
+    "react-hot-toast": "^2.4.1",
     "react-router-dom": "^6.27.0"
   },
   "devDependencies": {
