@@ -7,7 +7,7 @@ const connectDB = async () => {
       host: "localhost", // Cambia al host de tu base de datos
       user: "root", // Cambia al usuario de tu base de datos
       password: "fk1322", // Cambia a la contraseña de tu base de datos
-      database: "prueba-nutriapp", // Cambia al nombre de tu base de datos
+      database: "nutriapp", // Cambia al nombre de tu base de datos
     });
 
     console.log("Conexión exitosa a la base de datos");
