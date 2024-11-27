@@ -12,3 +12,4 @@ export { RegimenTiempos } from './Regimen-por-tiempos';
 export { RegimesPanel } from './Regimes-panel'; // Añadido
 export { Register } from './Register';
 export { Registerpatient } from './Register-patient';
+export {Register_regimenesCD} from './Register_regimenesCD';

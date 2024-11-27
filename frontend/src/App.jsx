@@ -12,6 +12,7 @@ import {
   RegimenTiempos,
   RegimesPanel,
   Register,
+  Register_regimenesCD,
   Registerpatient,
 } from './pages/';
 
@@ -89,6 +90,14 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <RegimenTiempos />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '/register_regimenescd',
+    element: (
+      <ProtectedRoute>
+        <Register_regimenesCD />
       </ProtectedRoute>
     ),
   },
