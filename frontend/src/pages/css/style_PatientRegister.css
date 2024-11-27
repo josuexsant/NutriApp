@@ -1,11 +1,12 @@
 .fondo {
-  max-width: 900px;
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
-  font-family: Arial, Helvetica, sans-serif;
+  max-width: auto; /* Asegura que el ancho máximo sea el total de su contenedor */
+  background-color: #f9f9f9; /* Color de fondo claro y profesional */
+  border-radius: 2rem; /* Bordes redondeados */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Más profundidad en la sombra */
+  margin: 4rem auto 1.5rem auto; /* Centrado horizontal y espacio superior/inferior */
+  padding: 2rem; /* Espacio interno para un diseño limpio */
+  font-family: "Arial", "Helvetica", sans-serif; /* Mantén el estilo de fuente */
+  border: 1px solid #e0e0e0; /* Borde sutil para mayor definición */
 }
 
 /* Título */
