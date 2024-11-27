@@ -99,7 +99,7 @@ export const login = (req, res) => {
 		console.log("Usuario logeado");
 		res.status(200).json({ message: "Usuario logeado" });
 	} else {
-		console.log("Usuario no logeado");
+		console.log("Usuario no logeado"); 
 		res.status(400).json({ error: "Usuario no logeado" });
 	}
 };
