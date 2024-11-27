@@ -8,7 +8,7 @@ dotenv.config();
 const app = express();
 
 app.use(express.json());
-// app.use(authMiddleware);
+app.use(authMiddleware);
 app.use(express.urlencoded({ extended: false }));
 
 app.use("/", router);

@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken"; // Asegúrate de importar jwt
 export const authMiddleware = (req, res, next) => {
 	const token = req.headers["authorization"]?.split(" ")[1]; // Extraemos el token después de "Bearer"
 
-	req.session = { usuario: null };
+	req.session = { email: null };
 
 	if (!token) {
 		return next(); // Si no hay token, pasa al siguiente middleware
@@ -12,11 +12,11 @@ export const authMiddleware = (req, res, next) => {
 
 	try {
 		const data = jwt.verify(token, process.env.SECRET_KEY); // Verifica el token
-		req.session.user = {
-			usuario: data.usuario_id,
+		req.session = {
+			email: data.email,
 		};
 	} catch (error) {
-		console.log("Token inválido:", error); // Para depuración
+		return res.status(401).json({ error: "Token inválido o malformado" }); // Respuesta clara
 	}
 
 	next(); // Continua al siguiente middleware o ruta
