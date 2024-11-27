@@ -84,6 +84,7 @@ const autenticarNutriologo = async (req, res) => {
 		const [tokenQuery] = await connection.execute("SELECT @token AS token");
 
 		if (tokenQuery[0].token) {
+			console.log("Token:", tokenQuery[0].token);
 			res.status(200).json({ token: tokenQuery[0].token });
 		} else {
 			res.status(400).json({ error: "Correo electrónico o contraseña incorrectos." });
