@@ -5,24 +5,23 @@ import { MainLayout } from "../layouts/MainLayout";
 import './css/style_PatientRegister.css';
 import { toast } from "react-hot-toast";
 
-
 export const Registerpatient = () => {
 
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    nombre: "",
-    apellidos: "",
-    fechaNacimiento: "",
+    nombres: "",
+    apellido_pat: "",
+    apellido_mat: "",
+    fecha_nacimiento: "",
     altura: "",
     peso: "",
-    correo: "",
-    contraseña: "",
+    correo_electronico: "",
+    contrasena: "",
     genero: "",
-    actividadFisica: "",
     telefono: ""
   });
- 
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -31,16 +30,13 @@ export const Registerpatient = () => {
     });
   };
 
-  const [errors, setErrors] = useState('');
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Aquí puedes manejar el envío del formulario, como enviarlo a un servidor
     console.log("Datos del formulario:", formData);
-    //Lógica para añadir el nuevo paciente a la base de datos
-    /*
+    // Aquí puedes manejar el envío del formulario, como enviarlo a un servidor
+    
     try {
-      const response = await fetch('/api/nutriologo/register', {
+      const response = await fetch('http://127.0.0.1:3000/register-paciente', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -51,17 +47,15 @@ export const Registerpatient = () => {
       const data = await response.json();
 
       if (response.ok) {
-        setMessage('Paciente registrado exitosamente');
+        toast.success('Paciente registrado exitosamente');
         // Aquí puedes redirigir o limpiar el formulario
       } else {
-        setMessage(data.message || 'Error al registrar');
+        toast.error(data.message || 'Error al registrar');
       }
     } catch (error) {
       console.error('Error al conectar con la API:', error);
       toast.error("Error al registrar el usuario");
-      setMessage('Error al registrar. Inténtalo de nuevo.');
     }
-    */
     toast.success("¡Paciente agregado exitosamente!", {
       position: "top-center",
       style: {
@@ -69,10 +63,10 @@ export const Registerpatient = () => {
         color: "white",
       },
     });
-    navigate("/Patients-panel");
+    navigate("/Regimes-panel");
   };
- 
-  return(
+
+  return (
     <MainLayout>
       <div className="container p-5 fondo">
         <h2 className="text-center mb-4">Formulario de Registro</h2>
@@ -80,53 +74,53 @@ export const Registerpatient = () => {
           {/* Fila de Nombre y Apellido Paterno */}
           <div className="row">
             <div className="col-md-4 mb-3">
-              <label htmlFor="nombre">Nombre</label>
+              <label htmlFor="nombres">Nombre</label>
               <input
                 type="text"
                 className="form-control"
-                id="nombre"
-                name="nombre"
-                value={formData.nombre}
+                id="nombres"
+                name="nombres"
+                value={formData.nombres}
                 onChange={handleChange}
                 required
               />
             </div>
             <div className="col-md-4 mb-3">
-              <label htmlFor="apellidoPaterno">Apellido Paterno</label>
+              <label htmlFor="apellido_pat">Apellido Paterno</label>
               <input
                 type="text"
                 className="form-control"
-                id="apellidoPaterno"
-                name="apellidoPaterno"
-                value={formData.apellidoPaterno}
+                id="apellido_pat"
+                name="apellido_pat"
+                value={formData.apellido_pat}
                 onChange={handleChange}
                 required
               />
             </div>
             <div className="col-md-4 mb-3">
-              <label htmlFor="apellidoMaterno">Apellido Materno</label>
+              <label htmlFor="apellido_mat">Apellido Materno</label>
               <input
                 type="text"
                 className="form-control"
-                id="apellidoMaterno"
-                name="apellidoMaterno"
-                value={formData.apellidoMaterno}
+                id="apellido_mat"
+                name="apellido_mat"
+                value={formData.apellido_mat}
                 onChange={handleChange}
                 required
               />
             </div>
           </div>
 
-          {/* Fila de Apellido Materno y Fecha de Nacimiento */}
+          {/* Fila de Fecha de Nacimiento y Peso */}
           <div className="row">
             <div className="col-md-4 mb-3">
-              <label htmlFor="fechaNacimiento">Fecha de Nacimiento</label>
+              <label htmlFor="fecha_nacimiento">Fecha de Nacimiento</label>
               <input
                 type="date"
                 className="form-control"
-                id="fechaNacimiento"
-                name="fechaNacimiento"
-                value={formData.fechaNacimiento}
+                id="fecha_nacimiento"
+                name="fecha_nacimiento"
+                value={formData.fecha_nacimiento}
                 onChange={handleChange}
                 required
               />
@@ -144,9 +138,10 @@ export const Registerpatient = () => {
               />
             </div>
             <div className="col-md-4 mb-3">
-              <label htmlFor="altura">Altura (cm)</label>
+              <label htmlFor="altura">Altura (m)</label>
               <input
                 type="number"
+                step="0.01"
                 className="form-control"
                 id="altura"
                 name="altura"
@@ -156,7 +151,7 @@ export const Registerpatient = () => {
               />
             </div>
           </div>
- 
+
           {/* Fila de Género y Correo */}
           <div className="row">
             <div className="col-md-6 mb-3">
@@ -168,9 +163,9 @@ export const Registerpatient = () => {
                     type="radio"
                     name="genero"
                     id="generoMasculino"
-                    value="masculino"
+                    value="M"
                     onChange={handleChange}
-                    checked={formData.genero === "masculino"}
+                    checked={formData.genero === "M"}
                     required
                   />
                   <label className="form-check-label" htmlFor="generoMasculino">
@@ -183,9 +178,9 @@ export const Registerpatient = () => {
                     type="radio"
                     name="genero"
                     id="generoFemenino"
-                    value="femenino"
+                    value="F"
                     onChange={handleChange}
-                    checked={formData.genero === "femenino"}
+                    checked={formData.genero === "F"}
                     required
                   />
                   <label className="form-check-label" htmlFor="generoFemenino">
@@ -195,25 +190,25 @@ export const Registerpatient = () => {
               </div>
             </div>
             <div className="col-md-6 mb-3">
-              <label htmlFor="correo">Correo Electrónico</label>
+              <label htmlFor="correo_electronico">Correo Electrónico</label>
               <input
                 type="email"
                 className="form-control"
-                id="correo"
-                name="correo"
-                value={formData.correo}
+                id="correo_electronico"
+                name="correo_electronico"
+                value={formData.correo_electronico}
                 onChange={handleChange}
                 required
               />
             </div>
           </div>
- 
-          {/* Fila de Contraseña y Altura */}
+
+          {/* Fila de Teléfono y Contraseña */}
           <div className="row">
-          <div className="col-md-4 mb-3">
-              <label htmlFor="telefomo">Telefono</label>
+            <div className="col-md-6 mb-3">
+              <label htmlFor="telefono">Teléfono</label>
               <input
-                type="number"
+                type="text"
                 className="form-control"
                 id="telefono"
                 name="telefono"
@@ -222,46 +217,14 @@ export const Registerpatient = () => {
                 required
               />
             </div>
-          <div className="col-md-8 mb-3">
-              <label htmlFor="actividadFisica">Actividad Física</label>
-              <select
-                className="form-control"
-                id="actividadFisica"
-                name="actividadFisica"
-                value={formData.actividadFisica}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Selecciona tu nivel de actividad</option>
-                <option value="alta">Alta</option>
-                <option value="moderada">Moderada</option>
-                <option value="baja">Baja</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Fila de Peso y Actividad Física */}
-          <div className="row">
-          <div className="col-md-4 mb-3">
-              <label htmlFor="contraseña">Contraseña</label>
+            <div className="col-md-6 mb-3">
+              <label htmlFor="contrasena">Contraseña</label>
               <input
                 type="password"
                 className="form-control"
-                id="contraseña"
-                name="contraseña"
-                value={formData.contraseña}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            <div className="col-md-4 mb-3">
-              <label htmlFor="contraseña">Confirmar Contraseña</label>
-              <input
-                type="password"
-                className="form-control"
-                id="contraseña"
-                name="contraseña"
-                value={formData.contraseña}
+                id="contrasena"
+                name="contrasena"
+                value={formData.contrasena}
                 onChange={handleChange}
                 required
               />
@@ -279,5 +242,5 @@ export const Registerpatient = () => {
     </MainLayout>
   );
 }
- 
+
 export default Registerpatient;

@@ -15,7 +15,11 @@ const guardarPaciente = async (req, res) => {
     correo_electronico,
     contrasena,
   } = req.body;
+
+  const parsedPeso = parseFloat(peso);
+  const parsedAltura = parseFloat(altura);
   const token = "abcdetest";
+
   try {
     const connection = await connectDB(); // Establece la conexión
     const [rows] = await connection.execute(
@@ -26,8 +30,8 @@ const guardarPaciente = async (req, res) => {
         apellido_mat,
         fecha_nacimiento,
         genero,
-        peso,
-        altura,
+        parsedPeso,
+        parsedAltura,
         telefono,
         correo_electronico,
         contrasena,
@@ -40,7 +44,7 @@ const guardarPaciente = async (req, res) => {
     if (error.original && error.original.sqlMessage) {
       res.status(400).json({ error: error.original.sqlMessage });
     } else {
-      res.status(500).json({ error: "Error interno del servidor." });
+      res.status(500).json({ error });
     }
   }
 };

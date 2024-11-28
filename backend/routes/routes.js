@@ -34,7 +34,39 @@ router.post(
 );
 router.post(
   "/register-paciente",
-  controller.PacienteController.guardarPaciente
+  (req, res) => {
+    const {
+      nombres,
+      apellido_pat,
+      apellido_mat,
+      fecha_nacimiento,
+      genero,
+      peso,
+      altura,
+      telefono,
+      correo_electronico,
+      contrasena,
+    } = req.body;
+
+    // Ensure peso and altura are numbers
+    const pacienteData = {
+      nombres,
+      apellido_pat,
+      apellido_mat,
+      fecha_nacimiento,
+      genero,
+      peso: parseFloat(peso),
+      altura: parseFloat(altura),
+      telefono,
+      correo_electronico,
+      contrasena,
+    };
+
+    // Replace the body property of the original request object
+    req.body = pacienteData;
+    // Call the controller function with the modified request object
+    controller.PacienteController.guardarPaciente(req, res);
+  }
 );
 
 router.get("/prueba_middleware", (req, res) => {
