@@ -1,3 +1,5 @@
+USE `nutriapp`;
+
 DELIMITER $$
 
 CREATE PROCEDURE guardar_paciente(
@@ -332,17 +334,137 @@ BEGIN
 
     -- Verificar si el correo electrónico existe
     IF v_id_nutriologo IS NULL THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El correo electrónico no está registrado.';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El correo electronico no está registrado.';
     END IF;
 
     -- Verificar si la contraseña coincide (suponiendo que la contraseña esté hasheada)
     IF v_contrasena_guardada != p_contrasena THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'La contraseña es incorrecta.';
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'La contrasena es incorrecta.';
     END IF;
 
     -- Devolver el token del nutriologo
     SET p_token = v_token;
 
+END$$
+
+DELIMITER ;
+
+DELIMITER $$
+
+CREATE PROCEDURE agregar_regimen_consumo_diario(
+    IN pacienteId INT,
+    IN diasJson JSON,
+    IN caloriasPorGrupoJson JSON,
+    IN alimentosJson JSON
+)
+BEGIN
+    DECLARE regimenId INT;
+    DECLARE diaId INT;
+    DECLARE grupoId INT;
+    DECLARE indexDias INT DEFAULT 0;
+    DECLARE indexCalorias INT DEFAULT 0;
+    DECLARE indexAlimentos INT DEFAULT 0;
+
+    DECLARE dia VARCHAR(50);
+    DECLARE limiteCalorias DECIMAL(10, 2);
+    DECLARE grupo VARCHAR(50);
+    DECLARE totalCalorias DECIMAL(10, 2);
+    DECLARE alimentoPrincipal VARCHAR(100);
+    DECLARE alternativa1 VARCHAR(100);
+    DECLARE alternativa2 VARCHAR(100);
+
+    -- Insertar en la tabla regimen_consumo_diario
+    INSERT INTO regimen_consumo_diario (paciente_id)
+    VALUES (pacienteId);
+
+    SET regimenId = LAST_INSERT_ID();
+
+    -- Manejo de días
+    WHILE JSON_UNQUOTE(JSON_EXTRACT(diasJson, CONCAT('$[', indexDias, '].dia'))) IS NOT NULL DO
+        SET dia = JSON_UNQUOTE(JSON_EXTRACT(diasJson, CONCAT('$[', indexDias, '].dia')));
+        SET limiteCalorias = JSON_UNQUOTE(JSON_EXTRACT(diasJson, CONCAT('$[', indexDias, '].limite_calorias')));
+
+        INSERT INTO dias (regimen_id, dia, limite_calorias)
+        VALUES (regimenId, dia, limiteCalorias);
+
+        SET diaId = LAST_INSERT_ID();
+        SET indexDias = indexDias + 1;
+
+        -- Manejo de calorías por grupo
+        SET indexCalorias = 0;
+        WHILE JSON_UNQUOTE(JSON_EXTRACT(caloriasPorGrupoJson, CONCAT('$[', indexCalorias, '].grupo'))) IS NOT NULL DO
+            SET grupo = JSON_UNQUOTE(JSON_EXTRACT(caloriasPorGrupoJson, CONCAT('$[', indexCalorias, '].grupo')));
+            SET totalCalorias = JSON_UNQUOTE(JSON_EXTRACT(caloriasPorGrupoJson, CONCAT('$[', indexCalorias, '].total_calorias')));
+
+            -- Asegurar que el grupo es único por día
+            IF JSON_UNQUOTE(JSON_EXTRACT(caloriasPorGrupoJson, CONCAT('$[', indexCalorias, '].dia'))) = dia THEN
+                INSERT INTO calorias_por_grupo_diario (dia_id, grupo, total_calorias)
+                VALUES (diaId, grupo, totalCalorias);
+
+                SET grupoId = LAST_INSERT_ID();
+
+                -- Manejo de alimentos por grupo
+                SET indexAlimentos = 0;
+                WHILE JSON_UNQUOTE(JSON_EXTRACT(alimentosJson, CONCAT('$[', indexAlimentos, '].alimento_principal'))) IS NOT NULL DO
+                    IF JSON_UNQUOTE(JSON_EXTRACT(alimentosJson, CONCAT('$[', indexAlimentos, '].grupo'))) = grupo AND
+                       JSON_UNQUOTE(JSON_EXTRACT(alimentosJson, CONCAT('$[', indexAlimentos, '].dia'))) = dia THEN
+                        SET alimentoPrincipal = JSON_UNQUOTE(JSON_EXTRACT(alimentosJson, CONCAT('$[', indexAlimentos, '].alimento_principal')));
+                        SET alternativa1 = JSON_UNQUOTE(JSON_EXTRACT(alimentosJson, CONCAT('$[', indexAlimentos, '].alternativa_1')));
+                        SET alternativa2 = JSON_UNQUOTE(JSON_EXTRACT(alimentosJson, CONCAT('$[', indexAlimentos, '].alternativa_2')));
+
+                        INSERT INTO alimentos_consumo_diario (calorias_por_grupo_id, alimento_principal, alternativa_1, alternativa_2)
+                        VALUES (grupoId, alimentoPrincipal, alternativa1, alternativa2);
+                    END IF;
+
+                    SET indexAlimentos = indexAlimentos + 1;
+                END WHILE;
+            END IF;
+
+            SET indexCalorias = indexCalorias + 1;
+        END WHILE;
+    END WHILE;
+END$$
+
+DELIMITER ;
+
+/*
+CALL agregar_regimen_consumo_diario(
+    101,
+    '[{"dia": "Lunes", "limite_calorias": 2000}, {"dia": "Martes", "limite_calorias": 1800}]', -- JSON con los días
+    '[{"dia": "Lunes", "grupo": "Cereales", "total_calorias": 500}, 
+      {"dia": "Lunes", "grupo": "Frutas", "total_calorias": 300}, 
+      {"dia": "Martes", "grupo": "Verduras", "total_calorias": 400}]', -- JSON con calorías por grupo
+    '[{"dia": "Lunes", "grupo": "Cereales", "alimento_principal": "Pan integral", "alternativa_1": "Avena", "alternativa_2": "Tortilla"}, 
+      {"dia": "Lunes", "grupo": "Frutas", "alimento_principal": "Manzana", "alternativa_1": "Plátano", "alternativa_2": "Pera"}, 
+      {"dia": "Martes", "grupo": "Verduras", "alimento_principal": "Brócoli", "alternativa_1": "Espinaca", "alternativa_2": "Acelga"}]' -- JSON con los alimentos
+);
+*/
+
+DELIMITER $$
+
+CREATE PROCEDURE ModificarCorreo(
+    IN ID_Nutriologo INT,
+    IN NuevoCorreoElectronico VARCHAR(100)
+)
+BEGIN
+    BEGIN TRY
+        -- Verifica si el ID_Nutriologo existe
+        IF EXISTS (SELECT 1 FROM nutriologo_sesion WHERE id_nutriologo = ID_Nutriologo) THEN
+            -- Actualiza el correo asociado al nutriólogo
+            UPDATE nutriologo_sesion
+            SET correo_electronico = NuevoCorreoElectronico
+            WHERE id_nutriologo = ID_Nutriologo;
+
+            SELECT 'Correo actualizado correctamente.' AS mensaje;
+        ELSE
+            SELECT 'El ID del nutriólogo no existe.' AS mensaje;
+        END IF;
+    END TRY
+    BEGIN CATCH
+        -- Captura y lanza errores en caso de fallo
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Error al actualizar el correo.';
+    END CATCH;
 END$$
 
 DELIMITER ;

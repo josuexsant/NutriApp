@@ -28,25 +28,6 @@ USE `nutriapp`;
 --
 -- Table structure for table `actividad_fisica`
 --
-CREATE TABLE paciente (
-    id_paciente INT AUTO_INCREMENT PRIMARY KEY,
-    nombres VARCHAR(50) NOT NULL,
-    apellido_pat VARCHAR(50) NOT NULL,
-    apellido_mat VARCHAR(50) NOT NULL,
-    fecha_nacimiento DATE NOT NULL,
-    genero CHAR(1) CHECK (genero IN ('M', 'F', 'O')),
-    peso FLOAT(5,2) NOT NULL,
-    altura FLOAT(4,2) NOT NULL,
-    telefono VARCHAR(10) NOT NULL
-);
-
-CREATE TABLE paciente_sesion (
-    id_paciente_sesion INT AUTO_INCREMENT PRIMARY KEY,
-    id_paciente INT NOT NULL,
-    correo_electronico VARCHAR(50) NOT NULL UNIQUE,
-    contrasena VARCHAR(8) NOT NULL,
-    FOREIGN KEY (id_paciente) REFERENCES paciente(id_paciente) ON DELETE CASCADE
-);
 -- Crear la tabla Nutriologo
 CREATE TABLE nutriologo (
     id_nutriologo INT AUTO_INCREMENT PRIMARY KEY,
@@ -76,16 +57,33 @@ CREATE TABLE tokens_nutriologos (
     FOREIGN KEY (id_sesion_nutriologo) REFERENCES nutriologo_sesion(id_nutriologo_sesion)
 );
 
--- tabla tokens_nutriologos
+CREATE TABLE paciente (
+    id_paciente INT AUTO_INCREMENT PRIMARY KEY,
+    nombres VARCHAR(50) NOT NULL,
+    apellido_pat VARCHAR(50) NOT NULL,
+    apellido_mat VARCHAR(50) NOT NULL,
+    fecha_nacimiento DATE NOT NULL,
+    genero CHAR(1) CHECK (genero IN ('M', 'F', 'O')),
+    peso FLOAT(5,2) NOT NULL,
+    altura FLOAT(4,2) NOT NULL,
+    telefono VARCHAR(10) NOT NULL
+);
+
+CREATE TABLE paciente_sesion (
+    id_paciente_sesion INT AUTO_INCREMENT PRIMARY KEY,
+    id_paciente INT NOT NULL,
+    correo_electronico VARCHAR(50) NOT NULL UNIQUE,
+    contrasena VARCHAR(8) NOT NULL,
+    FOREIGN KEY (id_paciente) REFERENCES paciente(id_paciente) ON DELETE CASCADE
+);
+
+-- tabla tokens_paciente
 CREATE TABLE tokens_paciente (
     id_token INT AUTO_INCREMENT PRIMARY KEY,
     id_sesion_paciente INT NOT NULL,
     token VARCHAR(255) NOT NULL,
     FOREIGN KEY (id_sesion_paciente) REFERENCES paciente_sesion(id_paciente_sesion)
 );
-
-
-
 
 -- Crear tabla regimen_por_tiempos
 CREATE TABLE regimen_por_tiempos (
@@ -124,10 +122,6 @@ CREATE TABLE alimentos_tiempos (
     FOREIGN KEY (calorias_por_grupo_id) REFERENCES calorias_por_grupo(id)
 );
 
-
-
-
-
 -- Crear tabla regimen_consumo_diario
 CREATE TABLE regimen_consumo_diario (
     id INT AUTO_INCREMENT PRIMARY KEY,                         
@@ -137,27 +131,28 @@ CREATE TABLE regimen_consumo_diario (
 
 -- Crear tabla dias
 CREATE TABLE dias (
-    id INT AUTO_INCREMENT PRIMARY KEY,                                                    
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    regimen_id INT,                                                      
     dia VARCHAR(50),
-    limite_calorias DECIMAL(10, 2)                  
+    limite_calorias DECIMAL(10, 2),
+    FOREIGN KEY (regimen_id) REFERENCES regimen_consumo_diario(id)
 );
 
 -- Crear tabla calorias_por_grupo
 CREATE TABLE calorias_por_grupo_diario (
-    id INT AUTO_INCREMENT PRIMARY KEY,                         
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    dia_id INT,                         
     grupo VARCHAR(50),                          
-    total_calorias DECIMAL(10, 2),              
-    FOREIGN KEY (regimen_id) REFERENCES regimen_consumo_diario(id)
+    total_calorias DECIMAL(10, 2),
+    FOREIGN KEY (dia_id) REFERENCES dias(id)              
 );
 
--- Crear tabla alimentos_tiempos
-CREATE TABLE alimentos_tiempos (
+-- Crear tabla alimentos_consumo_diario
+CREATE TABLE alimentos_consumo_diario (
     id INT AUTO_INCREMENT PRIMARY KEY,                         
-    dia_id INT,                              
     calorias_por_grupo_id INT,                  
     alimento_principal VARCHAR(100),             
     alternativa_1 VARCHAR(100),                 
     alternativa_2 VARCHAR(100),                 
-    FOREIGN KEY (calorias_por_grupo_id) REFERENCES calorias_por_grupo_diario(id),
-    FOREIGN KEY (dia_id) REFERENCES dias(id)
+    FOREIGN KEY (calorias_por_grupo_id) REFERENCES calorias_por_grupo_diario(id)
 );
