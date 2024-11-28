@@ -16,7 +16,8 @@ export const authMiddleware = (req, res, next) => {
 			email: data.email,
 		};
 	} catch (error) {
-		return res.status(401).json({ error: "Token inválido o malformado" }); // Respuesta clara
+		res.status(401).json({ error: "Token inválido o malformado" }); // Respuesta clara
+		return;
 	}
 
 	next(); // Continua al siguiente middleware o ruta
