@@ -43,7 +43,7 @@ export const Login = () => {
             width: "90%",          // El ancho se adapta a pantallas pequeñas
             maxWidth: "400px",     // Ancho máximo para pantallas grandes
             borderRadius: "10px",  // Bordes suaves
-            height: "450px",
+            height: "500px",
             marginTop: "-50px",
           }}
         >
