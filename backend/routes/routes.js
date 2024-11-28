@@ -1,8 +1,10 @@
 import { Router } from "express";
 import * as controller from "../controllers/index.js";
 export const router = Router();
-import { login } from "../controllers/nutriologoController.js";
-import { guardarNutriologo } from "../controllers/nutriologoController.js";
+import {
+  guardarNutriologo,
+  autenticarNutriologo,
+} from "../controllers/nutriologoController.js";
 
 // Escribe aqui tus rutas...
 router.post("/register", (req, res) => {
@@ -49,12 +51,8 @@ router.post("/prueba", (req, res) => {
 });
 
 router.post("/login", (req, res) => {
-  const status = login(req, res);
-  if (status === 200) {
-    res.status(200).json({ message: "Usuario logeado" });
-  } else {
-    res.status(400).json({ message: "Usuario no logeado" });
-  }
+  const { correo_electronico, contrasena } = req.body;
+  autenticarNutriologo(req, res);
 });
 
 router.get("/getPatients", (_, res) => {

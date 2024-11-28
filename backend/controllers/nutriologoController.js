@@ -69,7 +69,7 @@ export const guardarNutriologo = async (req, res) => {
   }
 };
 
-const autenticarNutriologo = async (req, res) => {
+export const autenticarNutriologo = async (req, res) => {
   const { correo_electronico, contrasena } = req.body;
 
   try {
@@ -95,7 +95,7 @@ const autenticarNutriologo = async (req, res) => {
     connection.end(); // Cierra la conexión después de la consulta
   } catch (error) {
     // Manejar errores del procedimiento almacenado
-    res.status(500).json({ error: "Error interno del servidor." });
+    res.status(400).json({ error });
   }
 };
 
