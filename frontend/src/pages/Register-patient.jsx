@@ -2,13 +2,12 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MainLayout } from "../layouts/MainLayout";
-import './css/style_PatientRegister.css';
+import "./css/style_PatientRegister.css";
 import { toast } from "react-hot-toast";
 
 export const Registerpatient = () => {
-
   const navigate = useNavigate();
-
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     nombres: "",
     apellido_pat: "",
@@ -19,14 +18,14 @@ export const Registerpatient = () => {
     correo_electronico: "",
     contrasena: "",
     genero: "",
-    telefono: ""
+    telefono: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value
+      [name]: value,
     });
   };
 
@@ -34,27 +33,27 @@ export const Registerpatient = () => {
     e.preventDefault();
     console.log("Datos del formulario:", formData);
     // Aquí puedes manejar el envío del formulario, como enviarlo a un servidor
-    
+
     try {
-      const response = await fetch('http://127.0.0.1:3000/register-paciente', {
-        method: 'POST',
+      const response = await fetch("http://127.0.0.1:3000/register-paciente", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
 
       const data = await response.json();
 
-      if (response.ok) {
-        toast.success('Paciente registrado exitosamente');
+      if (response.status === 200) {
+        toast.success("Paciente registrado exitosamente");
         // Aquí puedes redirigir o limpiar el formulario
+        navigate("/Regimes-panel");
       } else {
-        toast.error(data.message || 'Error al registrar');
+        setError(data.error.message);
       }
     } catch (error) {
-      console.error('Error al conectar con la API:', error);
-      toast.error("Error al registrar el usuario");
+      console.error("Error al conectar con la API:", error);
     }
     toast.success("¡Paciente agregado exitosamente!", {
       position: "top-center",
@@ -63,7 +62,6 @@ export const Registerpatient = () => {
         color: "white",
       },
     });
-    navigate("/Regimes-panel");
   };
 
   return (
@@ -233,6 +231,7 @@ export const Registerpatient = () => {
 
           {/* Botón de Registrar centrado */}
           <div className="text-center">
+            <p className="text-danger">{error}</p>
             <button type="submit" className="btn btn-primary btn-lg mt-3">
               Agregar paciente
             </button>
@@ -241,6 +240,6 @@ export const Registerpatient = () => {
       </div>
     </MainLayout>
   );
-}
+};
 
 export default Registerpatient;

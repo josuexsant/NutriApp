@@ -64,7 +64,7 @@ const verificarCorreoPaciente = async (req, res) => {
     if (error.original && error.original.sqlMessage) {
       res.status(400).json({ error: error.original.sqlMessage });
     } else {
-      res.status(500).json({ error: "Error interno del servidor." });
+      res.status(500).json({ error });
     }
   }
 };
