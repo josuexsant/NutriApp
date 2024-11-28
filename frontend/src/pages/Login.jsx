@@ -1,5 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import { useAuth } from "../hooks/useAuth";
@@ -8,6 +8,7 @@ import { MainLayout } from "../layouts/MainLayout";
 export const Login = () => {
   const navigate = useNavigate();
   const { signin, isAuthenticated } = useAuth();
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -21,7 +22,14 @@ export const Login = () => {
       email: e.target.inputEmail.value,
       password: e.target.inputPassword.value,
     };
-    await signin(credentials);
+
+    // Simulación de la respuesta de la API
+    if (credentials.email !== 'usuario@ejemplo.com' || credentials.password !== 'contraseña123') {
+      setErrorMessage('Las credenciales no están registradas.');
+    } else {
+      // Llamada a la función `signin` si las credenciales fueran correctas (en producción)
+      await signin(credentials);
+    }
   };
 
   return (
@@ -40,12 +48,12 @@ export const Login = () => {
             width: "90%",          // El ancho se adapta a pantallas pequeñas
             maxWidth: "400px",     // Ancho máximo para pantallas grandes
             borderRadius: "10px",  // Bordes suaves
-            height:"450px",
+            height: "450px",
             marginTop: "-50px",
           }}
         >
           <form onSubmit={handleSubmit}>
-           <h1 className="mb-3 text-center" style={{ fontSize: "1.5rem" }}>NutriApp</h1>
+            <h1 className="mb-3 text-center" style={{ fontSize: "1.5rem" }}>NutriApp</h1>
             <img
               className="mb-4 mx-auto d-block"
               src={logo}
@@ -77,6 +85,11 @@ export const Login = () => {
                 required
               />
             </div>
+            {errorMessage && (
+              <div className="alert alert-danger" role="alert">
+                {errorMessage}
+              </div>
+            )}
             <div className="d-flex justify-content-center">
               <button
                 className="btn btn-primary btn-block mb-3"
@@ -89,7 +102,7 @@ export const Login = () => {
 
             <div className="text-center">
               <Link to="/register" className="btn btn-link">
-                ¿Aún no tienes una cuenta? Registrate ahora
+                ¿Aún no tienes una cuenta? Regístrate ahora
               </Link>
             </div>
           </form>
