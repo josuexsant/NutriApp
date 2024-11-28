@@ -1,80 +1,81 @@
 import request from 'supertest';
-import app from '../../app'; // Adjust the path to your app
+import app from '../../app'; // Ajusta la ruta a tu aplicación
 
 describe('POST /register-paciente', () => {
-  it('should register a new patient successfully', async () => {
-    const newPatient = {
+  it('debería registrar un nuevo paciente exitosamente', async () => {
+    const nuevoPaciente = {
       name: 'John Doe',
       age: 30,
       email: 'john.doe@example.com',
-      password: 'password123'
+      password: 'password123',
     };
 
     const response = await request(app)
       .post('/register-paciente')
-      .send(newPatient);
+      .send(nuevoPaciente);
 
     expect(response.status).toBe(201);
     expect(response.body).toHaveProperty('id');
-    expect(response.body.name).toBe(newPatient.name);
-    expect(response.body.email).toBe(newPatient.email);
+    expect(response.body.name).toBe(nuevoPaciente.name);
+    expect(response.body.email).toBe(nuevoPaciente.email);
   });
 
-  it('should return 400 if required fields are missing', async () => {
-    const incompletePatient = {
-      name: 'Jane Doe'
+  it('debería devolver 400 si faltan campos obligatorios', async () => {
+    const pacienteIncompleto = {
+      name: 'Jane Doe',
     };
 
     const response = await request(app)
       .post('/register-paciente')
-      .send(incompletePatient);
+      .send(pacienteIncompleto);
 
     expect(response.status).toBe(400);
     expect(response.body).toHaveProperty('error');
   });
 
-  it('should return 409 if email already exists', async () => {
-    const existingPatient = {
+  it('debería devolver 409 si el correo electrónico ya existe', async () => {
+    const pacienteExistente = {
       name: 'John Doe',
       age: 30,
       email: 'john.doe@example.com',
-      password: 'password123'
+      password: 'password123',
     };
 
-    // First registration
-    await request(app)
-      .post('/register-paciente')
-      .send(existingPatient);
+    // Primer registro
+    await request(app).post('/register-paciente').send(pacienteExistente);
 
-    // Second registration with the same email
+    // Segundo registro con el mismo correo
     const response = await request(app)
       .post('/register-paciente')
-      .send(existingPatient);
+      .send(pacienteExistente);
 
     expect(response.status).toBe(409);
     expect(response.body).toHaveProperty('error');
   });
-});
-it('should register a new patient with detailed information successfully', async () => {
-  const newPatient = {
-    nombres: 'Gabriel',
-    apellido_pat: 'Romero',
-    apellido_mat: 'Luna',
-    fecha_nacimiento: '1990-05-15',
-    genero: 'M',
-    peso: 75.5,
-    altura: 1.75,
-    telefono: '0987654321',
-    correo_electronico: 'gabriel.luna@example.com',
-    contrasena: 'securepassword123'
-  };
 
-  const response = await request(app)
-    .post('/register-paciente')
-    .send(newPatient);
+  it('debería registrar un nuevo paciente con información detallada exitosamente', async () => {
+    const nuevoPaciente = {
+      nombres: 'Gabriel',
+      apellido_pat: 'Romero',
+      apellido_mat: 'Luna',
+      fecha_nacimiento: '1990-05-15',
+      genero: 'M',
+      peso: 75.5,
+      altura: 1.75,
+      telefono: '0987654321',
+      correo_electronico: 'gabriel.luna@example.com',
+      contrasena: 'securepassword123',
+    };
 
-  expect(response.status).toBe(201);
-  expect(response.body).toHaveProperty('id');
-  expect(response.body.nombres).toBe(newPatient.nombres);
-  expect(response.body.correo_electronico).toBe(newPatient.correo_electronico);
+    const response = await request(app)
+      .post('/register-paciente')
+      .send(nuevoPaciente);
+
+    expect(response.status).toBe(201);
+    expect(response.body).toHaveProperty('id');
+    expect(response.body.nombres).toBe(nuevoPaciente.nombres);
+    expect(response.body.correo_electronico).toBe(
+      nuevoPaciente.correo_electronico
+    );
+  });
 });
