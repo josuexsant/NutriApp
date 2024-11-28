@@ -5,6 +5,7 @@ import {
   guardarNutriologo,
   autenticarNutriologo,
 } from "../controllers/nutriologoController.js";
+import { obtenerPacientes } from "../controllers/pacienteController.js";
 
 // Escribe aqui tus rutas...
 router.post("/register", (req, res) => {
@@ -56,17 +57,7 @@ router.post("/login", (req, res) => {
 });
 
 router.get("/getPatients", (_, res) => {
-  const patients = [
-    { id: 1, name: "Juan Perez" },
-    { id: 2, name: "Maria Lopez" },
-    { id: 3, name: "Carlos Sanchez" },
-    { id: 4, name: "Ana Martinez" },
-    { id: 5, name: "Luis Fernandez" },
-    { id: 6, name: "Sofia Ramirez" },
-    { id: 7, name: "Pedro Rodriguez" },
-  ];
-
-  return res.status(200).json(patients);
+  obtenerPacientes(_, res);
 });
 
 router.post("/logout", (req, res) => {

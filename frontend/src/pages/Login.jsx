@@ -7,8 +7,9 @@ import { MainLayout } from "../layouts/MainLayout";
 
 export const Login = () => {
   const navigate = useNavigate();
-  const { signin, isAuthenticated } = useAuth();
+  const { signin, isAuthenticated, error } = useAuth();
   const [errorMessage, setErrorMessage] = useState('');
+
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -19,17 +20,11 @@ export const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const credentials = {
-      email: e.target.inputEmail.value,
-      password: e.target.inputPassword.value,
+      correo_electronico: e.target.inputEmail.value,
+      contrasena: e.target.inputPassword.value,
     };
-
-    // Simulación de la respuesta de la API
-    if (credentials.email !== 'usuario@ejemplo.com' || credentials.password !== 'contraseña123') {
-      setErrorMessage('Las credenciales no están registradas.');
-    } else {
-      // Llamada a la función `signin` si las credenciales fueran correctas (en producción)
-      await signin(credentials);
-    }
+    console.log(credentials);
+    await signin(credentials, setErrorMessage);
   };
 
   return (
@@ -90,7 +85,8 @@ export const Login = () => {
                 {errorMessage}
               </div>
             )}
-            <div className="d-flex justify-content-center">
+            <div className="d-flex flex-column justify-content-center">
+              <p className="text-danger">{error}</p>
               <button
                 className="btn btn-primary btn-block mb-3"
                 type="submit"

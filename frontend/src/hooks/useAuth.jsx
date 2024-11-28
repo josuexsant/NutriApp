@@ -3,8 +3,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-
-  
+  const [error, setError] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(
     () => JSON.parse(localStorage.getItem("isAuthenticated")) || false
   );
@@ -13,25 +12,29 @@ export const AuthProvider = ({ children }) => {
   );
 
   const signin = async (credentials) => {
-    /*fetch("http://localhost:8000/login/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(credentials),
-    })
-      .then((response) => response.json())
-      .then((data) => {
+    try {
+      const response = await fetch("http://localhost:3000/login/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(credentials),
+      });
+      const data = await response.json();
+      if (response.ok) {
         console.log("Success:", data);
         localStorage.setItem("token", data.token);
-        localStorage.setItem("username", data.user.username);
         setIsAuthenticated(true);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });*/
-      console.log('Credentials:',JSON.stringify(credentials));
-      setIsAuthenticated(true);
+      } else {
+        setError(data.error.message);
+        setIsAuthenticated(false);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setError(error.message);
+      setIsAuthenticated(false);
+    }
+    console.log("Credentials:", JSON.stringify(credentials));
   };
 
   const signout = async () => {
@@ -52,8 +55,9 @@ export const AuthProvider = ({ children }) => {
       .catch((error) => {
         console.error("Error:", error);
       });*/
-      console.log('Signout');
-      setIsAuthenticated(false);
+    console.log("Signout");
+    setIsAuthenticated(false);
+    localStorage.removeItem("token");
   };
 
   useEffect(() => {
@@ -66,7 +70,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, username, signin, signout }}
+      value={{ isAuthenticated, username, signin, signout, error }}
     >
       {children}
     </AuthContext.Provider>
