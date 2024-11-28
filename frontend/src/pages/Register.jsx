@@ -60,6 +60,7 @@ export const Register = () => {
 
       if (response.status === 200) {
         setMessage("Nutriólogo registrado exitosamente");
+        alert("Nutriólogo registrado exitosamente, ya puedes iniciar sesión");
         navigate("/");
       } else {
         setErrors(responseData.error.message);
