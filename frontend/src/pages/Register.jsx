@@ -250,4 +250,4 @@ export const Register = () => {
   );
 };
 
-export default Register;git
+export default Register;
