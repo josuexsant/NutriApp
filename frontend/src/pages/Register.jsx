@@ -1,26 +1,26 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import logo from '../assets/logo.png';
-import { MainLayout } from '../layouts/MainLayout';
+import "bootstrap/dist/css/bootstrap.min.css";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import logo from "../assets/logo.png";
+import { MainLayout } from "../layouts/MainLayout";
 
 export const Register = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: '',
-    lastname1: '',
-    lastname2: '',
-    phoneNumber: '',
-    state: '',
-    city: '',
-    postalCode: '',
-    license: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+    name: "",
+    lastname1: "",
+    lastname2: "",
+    phoneNumber: "",
+    state: "",
+    city: "",
+    postalCode: "",
+    license: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
-  const [errors, setErrors] = useState('');
-  const [message, setMessage] = useState('');
+  const [errors, setErrors] = useState("");
+  const [message, setMessage] = useState("");
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -28,9 +28,9 @@ export const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form data:', formData);
+    console.log("Form data:", formData);
     if (formData.password !== formData.confirmPassword) {
-      setErrors('Las contraseñas no coinciden');
+      setErrors("Las contraseñas no coinciden");
       return;
     }
 
@@ -44,29 +44,30 @@ export const Register = () => {
       cedula_profesional: formData.license,
       correo_electronico: formData.email,
       contrasena: formData.password,
-      token: 'abcdef123456',
+      token: "abcdef123456",
     };
 
     try {
-      const response = await fetch('http://127.0.0.1:3000/register', {
-        method: 'POST',
+      const response = await fetch("http://127.0.0.1:3000/register", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(dataToSend),
       });
 
       const responseData = await response.json();
 
-      if (response.ok) {
-        setMessage('Nutriólogo registrado exitosamente');
-        // Aquí puedes redirigir o limpiar el formulario
+      if (response.status === 200) {
+        setMessage("Nutriólogo registrado exitosamente");
+        navigate("/");
       } else {
-        setMessage(responseData.message || 'Error al registrar');
+        setErrors(responseData.error.message);
+        setMessage(responseData.message || "Error al registrar");
       }
     } catch (error) {
-      console.error('Error al conectar con la API:', error);
-      setMessage('Error al registrar. Inténtalo de nuevo.');
+      console.error("Error al conectar con la API:", error);
+      setMessage("Error al registrar. Inténtalo de nuevo.");
     }
   };
 
@@ -74,9 +75,9 @@ export const Register = () => {
     <MainLayout>
       <div
         className="d-flex justify-content-center align-items-center min-h-screen"
-        style={{ backgroundColor: '#f8f9fa' }}
+        style={{ backgroundColor: "#f8f9fa" }}
       >
-        <div className="card p-4" style={{ width: '400px' }}>
+        <div className="card p-4" style={{ width: "400px" }}>
           <form className="form-signin" onSubmit={handleSubmit}>
             <h1 className="h3 mb-3 font-weight-normal text-center">NutriApp</h1>
             <img
@@ -140,7 +141,36 @@ export const Register = () => {
               <option value="">Selecciona tu estado</option>
               <option value="Aguascalientes">Aguascalientes</option>
               <option value="Baja California">Baja California</option>
-              {/* Más opciones */}
+              <option value="Baja California Sur">Baja California Sur</option>
+              <option value="Campeche">Campeche</option>
+              <option value="Chiapas">Chiapas</option>
+              <option value="Chihuahua">Chihuahua</option>
+              <option value="Ciudad de México">Ciudad de México</option>
+              <option value="Coahuila">Coahuila</option>
+              <option value="Colima">Colima</option>
+              <option value="Durango">Durango</option>
+              <option value="Estado de México">Estado de México</option>
+              <option value="Guanajuato">Guanajuato</option>
+              <option value="Guerrero">Guerrero</option>
+              <option value="Hidalgo">Hidalgo</option>
+              <option value="Jalisco">Jalisco</option>
+              <option value="Michoacán">Michoacán</option>
+              <option value="Morelos">Morelos</option>
+              <option value="Nayarit">Nayarit</option>
+              <option value="Nuevo León">Nuevo León</option>
+              <option value="Oaxaca">Oaxaca</option>
+              <option value="Puebla">Puebla</option>
+              <option value="Querétaro">Querétaro</option>
+              <option value="Quintana Roo">Quintana Roo</option>
+              <option value="San Luis Potosí">San Luis Potosí</option>
+              <option value="Sinaloa">Sinaloa</option>
+              <option value="Sonora">Sonora</option>
+              <option value="Tabasco">Tabasco</option>
+              <option value="Tamaulipas">Tamaulipas</option>
+              <option value="Tlaxcala">Tlaxcala</option>
+              <option value="Veracruz">Veracruz</option>
+              <option value="Yucatán">Yucatán</option>
+              <option value="Zacatecas">Zacatecas</option>
             </select>
 
             <input
@@ -220,4 +250,4 @@ export const Register = () => {
   );
 };
 
-export default Register;
+export default Register;git
