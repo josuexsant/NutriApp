@@ -15,7 +15,7 @@ const guardarPaciente = async (req, res) => {
     correo_electronico,
     contrasena,
   } = req.body;
-  const token = await auth.generarToken(correo_electronico, contrasena);
+  const token = "abcdetest";
   try {
     const connection = await connectDB(); // Establece la conexión
     const [rows] = await connection.execute(

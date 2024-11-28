@@ -60,7 +60,7 @@ export const Dashboard = () => {
               <div key={patient.id} className="col-md-3 mb-4">
                 <div className="card h-100">
                   <div className="card-body">
-                    <h5 className="card-title">{patient.name}</h5>
+                    <h5 className="card-title">{patient.nombre_completo}</h5>
                     {/* Menú desplegable */}
                     <div className="dropdown mt-auto text-end">
                       <button
@@ -74,7 +74,7 @@ export const Dashboard = () => {
                       </button>
                       <ul
                         className="dropdown-menu"
-                        aria-labelledby={`dropdownMenuButton${patient.id}`}
+                        aria-labelledby={`dropdownMenuButton${patient.id_paciente}`}
                       >
                         {menuOptions.map((option, index) => (
                           <li key={index}>
