@@ -2,7 +2,7 @@ import request from 'supertest';
 import app from '../../index'; // Asegúrate de que la ruta a tu archivo app.js sea correcta
 
 describe('POST /login', () => {
-  it('should respond with a 200 status code and a token for valid credentials', async () => {
+  it('Inicio de sesion con credenciales validas', async () => {
     const response = await request(app)
       .post('/login')
       .send({
@@ -13,7 +13,7 @@ describe('POST /login', () => {
     //expect(response.body).toHaveProperty('token');
   });
 
-  it('should respond with a 401 status code for invalid credentials', async () => {
+  it('Inicio de sesion con credenciales no validas', async () => {
     const response = await request(app)
       .post('/login')
       .send({

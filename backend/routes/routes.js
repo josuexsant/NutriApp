@@ -2,15 +2,28 @@ import { Router } from "express";
 import * as controller from "../controllers/index.js";
 export const router = Router();
 import { login } from "../controllers/nutriologoController.js";
+import { guardarNutriologo } from "../controllers/nutriologoController.js";
 
 // Escribe aqui tus rutas...
-router.post(
-  "/register",
-  (req, res) => {
-    return res.status(200).json({ message: "todo ok" });
-  }
-  //"/register", controller.NutriologoController.guardarNutriologo
-);
+router.post("/register", (req, res) => {
+  const {
+    nombre,
+    apellido_pat,
+    apellido_mat,
+    telefono,
+    ciudad_residencia,
+    codigo_postal,
+    cedula_profesional,
+    correo_electronico,
+    contrasena,
+    token,
+  } = req.body;
+
+  // Add your logic here to handle the registration
+  console.log("hola desde la api");
+  console.log(req.body);
+  guardarNutriologo(req, res);
+});
 
 router.post(
   "/autenticar-nutriologo",
@@ -60,13 +73,4 @@ router.get("/getPatients", (_, res) => {
 
 router.post("/logout", (req, res) => {
   return res.status(200);
-});
-
-router.post("/login", (req, res) => {
-  const status = login(req, res);
-  if (status === 200) {
-    res.status(200).json({ message: "Usuario logeado" });
-  } else {
-    res.status(400).json({ message: "Usuario no logeado" });
-  }
 });
