@@ -17,7 +17,7 @@ export const Register = () => {
   // Función para manejar el envío del formulario
   const onSubmit = async (data) => {
     e.preventDefault();
-
+    console.log(data);
     try {
       const response = await fetch('/api/nutriologo/register', {
         method: 'POST',
@@ -240,4 +240,4 @@ export const Register = () => {
   );
 };
 
-export default Register;
+export default Register; 
