@@ -1,39 +1,68 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.png';
 import { MainLayout } from '../layouts/MainLayout';
 
 export const Register = () => {
   const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    name: '',
+    lastname1: '',
+    lastname2: '',
+    phoneNumber: '',
+    state: '',
+    city: '',
+    postalCode: '',
+    license: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
   const [errors, setErrors] = useState('');
-  const {
-    register,
-    handleSubmit,
-    formState: { errors: formErrors },
-  } = useForm();
+  const [message, setMessage] = useState('');
 
-  // Función para manejar el envío del formulario
-  const onSubmit = async (data) => {
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(data);
+    console.log('Form data:', formData);
+    if (formData.password !== formData.confirmPassword) {
+      setErrors('Las contraseñas no coinciden');
+      return;
+    }
+
+    const dataToSend = {
+      nombre: formData.name,
+      apellido_pat: formData.lastname1,
+      apellido_mat: formData.lastname2,
+      telefono: formData.phoneNumber,
+      ciudad_residencia: formData.city,
+      codigo_postal: formData.postalCode,
+      cedula_profesional: formData.license,
+      correo_electronico: formData.email,
+      contrasena: formData.password,
+      token: 'abcdef123456',
+    };
+
     try {
-      const response = await fetch('/api/nutriologo/register', {
+      const response = await fetch('http://127.0.0.1:3000/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(dataToSend),
       });
 
-      const data = await response.json();
+      const responseData = await response.json();
 
       if (response.ok) {
         setMessage('Nutriólogo registrado exitosamente');
         // Aquí puedes redirigir o limpiar el formulario
       } else {
-        setMessage(data.message || 'Error al registrar');
+        setMessage(responseData.message || 'Error al registrar');
       }
     } catch (error) {
       console.error('Error al conectar con la API:', error);
@@ -48,7 +77,7 @@ export const Register = () => {
         style={{ backgroundColor: '#f8f9fa' }}
       >
         <div className="card p-4" style={{ width: '400px' }}>
-          <form className="form-signin" onSubmit={handleSubmit(onSubmit)}>
+          <form className="form-signin" onSubmit={handleSubmit}>
             <h1 className="h3 mb-3 font-weight-normal text-center">NutriApp</h1>
             <img
               className="mb-4 mx-auto d-block"
@@ -61,171 +90,122 @@ export const Register = () => {
               Registrate
             </h2>
 
-            {/* Campo nombre */}
-            <label htmlFor="name" className="sr-only">
-              Nombre
-            </label>
             <input
               type="text"
-              id="name"
+              name="name"
               className="form-control mb-3"
-              {...register('name', { required: 'Este campo es obligatorio' })}
+              placeholder="Nombre"
+              value={formData.name}
+              onChange={handleChange}
+              required
             />
-            {formErrors.name && (
-              <p className="text-danger">{formErrors.name.message}</p>
-            )}
 
-            {/* Campo apellido paterno */}
-            <label htmlFor="lastname1" className="sr-only">
-              Apellido Paterno
-            </label>
             <input
               type="text"
-              id="lastname1"
+              name="lastname1"
               className="form-control mb-3"
-              {...register('lastname1', {
-                required: 'Este campo es obligatorio',
-              })}
+              placeholder="Apellido Paterno"
+              value={formData.lastname1}
+              onChange={handleChange}
+              required
             />
-            {formErrors.lastname1 && (
-              <p className="text-danger">{formErrors.lastname1.message}</p>
-            )}
 
-            {/* Campo apellido materno */}
-            <label htmlFor="lastname2" className="sr-only">
-              Apellido Materno
-            </label>
             <input
               type="text"
-              id="lastname2"
+              name="lastname2"
               className="form-control mb-3"
-              {...register('lastname2', {
-                required: 'Este campo es obligatorio',
-              })}
+              placeholder="Apellido Materno"
+              value={formData.lastname2}
+              onChange={handleChange}
+              required
             />
-            {formErrors.lastname2 && (
-              <p className="text-danger">{formErrors.lastname2.message}</p>
-            )}
 
-            {/* Campo teléfono */}
-            <label htmlFor="phoneNumber" className="sr-only">
-              Número de Teléfono
-            </label>
             <input
               type="number"
-              id="phoneNumber"
+              name="phoneNumber"
               className="form-control mb-3"
-              {...register('phoneNumber', {
-                required: 'Este campo es obligatorio',
-              })}
+              placeholder="Número de Teléfono"
+              value={formData.phoneNumber}
+              onChange={handleChange}
+              required
             />
-            {formErrors.phoneNumber && (
-              <p className="text-danger">{formErrors.phoneNumber.message}</p>
-            )}
 
-            {/* Campo estado */}
-            <label htmlFor="inputState" className="sr-only">
-              Estado
-            </label>
             <select
-              id="inputState"
+              name="state"
               className="form-control mb-3"
-              {...register('state', { required: 'Selecciona un estado' })}
+              value={formData.state}
+              onChange={handleChange}
+              required
             >
               <option value="">Selecciona tu estado</option>
               <option value="Aguascalientes">Aguascalientes</option>
               <option value="Baja California">Baja California</option>
               {/* Más opciones */}
             </select>
-            {formErrors.state && (
-              <p className="text-danger">{formErrors.state.message}</p>
-            )}
 
-            {/* Campo ciudad */}
-            <label htmlFor="city" className="sr-only">
-              Ciudad
-            </label>
             <input
               type="text"
-              id="city"
+              name="city"
               className="form-control mb-3"
-              {...register('city', { required: 'Este campo es obligatorio' })}
+              placeholder="Ciudad"
+              value={formData.city}
+              onChange={handleChange}
+              required
             />
-            {formErrors.city && (
-              <p className="text-danger">{formErrors.city.message}</p>
-            )}
 
-            {/* Campo cédula profesional */}
-            <label htmlFor="license" className="sr-only">
-              Cedúla Profesional
-            </label>
+            <input
+              type="text"
+              name="postalCode"
+              className="form-control mb-3"
+              placeholder="Código Postal"
+              value={formData.postalCode}
+              onChange={handleChange}
+              required
+            />
+
             <input
               type="number"
-              id="license"
+              name="license"
               className="form-control mb-3"
-              {...register('license', {
-                required: 'Este campo es obligatorio',
-              })}
+              placeholder="Cédula Profesional"
+              value={formData.license}
+              onChange={handleChange}
+              required
             />
-            {formErrors.license && (
-              <p className="text-danger">{formErrors.license.message}</p>
-            )}
 
-            {/* Campo correo electrónico */}
-            <label htmlFor="email" className="sr-only">
-              Correo electrónico
-            </label>
             <input
               type="email"
-              id="email"
+              name="email"
               className="form-control mb-3"
-              {...register('email', { required: 'Este campo es obligatorio' })}
+              placeholder="Correo electrónico"
+              value={formData.email}
+              onChange={handleChange}
+              required
             />
-            {formErrors.email && (
-              <p className="text-danger">{formErrors.email.message}</p>
-            )}
 
-            {/* Campo contraseña */}
-            <label htmlFor="password" className="sr-only">
-              Contraseña
-            </label>
             <input
               type="password"
-              id="password"
+              name="password"
               className="form-control mb-3"
-              {...register('password', {
-                required: 'Este campo es obligatorio',
-              })}
+              placeholder="Contraseña"
+              value={formData.password}
+              onChange={handleChange}
+              required
             />
-            {formErrors.password && (
-              <p className="text-danger">{formErrors.password.message}</p>
-            )}
             <p className="text-gray-200">
               La contraseña debe tener mínimo 8 caracteres
             </p>
 
-            {/* Campo confirmar contraseña */}
-            <label htmlFor="confirmPassword" className="sr-only">
-              Confirmar Contraseña
-            </label>
             <input
               type="password"
-              id="confirmPassword"
+              name="confirmPassword"
               className="form-control mb-3"
-              {...register('confirmPassword', {
-                required: 'Este campo es obligatorio',
-                validate: (value) =>
-                  value === getValues('password') ||
-                  'Las contraseñas no coinciden',
-              })}
+              placeholder="Confirmar Contraseña"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              required
             />
-            {formErrors.confirmPassword && (
-              <p className="text-danger">
-                {formErrors.confirmPassword.message}
-              </p>
-            )}
 
-            {/* Mostrar errores */}
             <div className="d-flex flex-column align-items-center">
               <p className="text-danger">{errors}</p>
               <button className="btn btn-lg btn-primary mb-2" type="submit">
@@ -240,4 +220,4 @@ export const Register = () => {
   );
 };
 
-export default Register; 
+export default Register;
