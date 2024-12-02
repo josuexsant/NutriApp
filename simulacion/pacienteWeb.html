@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NutriApp - Paciente Web</title>
+  <link rel="stylesheet" href="style_pacienteWeb.css">
+</head>
+<body>
+  <div class="paciente-web">
+    <main class="main-content p-4">
+      <section class="stats-section mb-4">
+        <h2>Estadísticas del Día</h2>
+        <div class="card p-3">
+          <p><strong>Calorías:</strong> 500 kcal</p>
+          <p><strong>Proteínas:</strong> 30 g</p>
+          <p><strong>Carbohidratos:</strong> 70 g</p>
+        </div>
+      </section>
+
+      <section class="consumed-list-section mb-4">
+        <h3>Registro de Consumo</h3>
+        <ul class="list-group">
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <strong>Manzana</strong>
+            <span>50 kcal, 1 g de proteínas, 13 g de carbohidratos</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <strong>Arroz</strong>
+            <span>200 kcal, 5 g de proteínas, 40 g de carbohidratos</span>
+          </li>
+        </ul>
+      </section>
+
+      <section class="form-section">
+        <h3>Agregar Alimento</h3>
+        <form id="add-food-form" class="card p-3">
+          <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre del alimento</label>
+            <input type="text" id="nombre" name="nombre" placeholder="Nombre del alimento" class="form-control" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="calorias" class="form-label">Calorías</label>
+            <input type="number" id="calorias" name="calorias" placeholder="Calorías" class="form-control" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="proteinas" class="form-label">Proteínas</label>
+            <input type="number" id="proteinas" name="proteinas" placeholder="Proteínas" class="form-control" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="carbohidratos" class="form-label">Carbohidratos</label>
+            <input type="number" id="carbohidratos" name="carbohidratos" placeholder="Carbohidratos" class="form-control" required>
+          </div>
+
+          <button type="button" id="add-food-btn" class="btn btn-primary w-100">Agregar</button>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <script src="test_pacienteWeb.js"></script>
+</body>
+</html>
